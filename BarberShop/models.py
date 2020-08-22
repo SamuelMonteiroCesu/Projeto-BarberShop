@@ -3,10 +3,10 @@ from django.db import models
 
 class Procedure(models.Model):
     procedure_id = models.AutoField(primary_key=True)
-    procedure_name = models.CharField(max_length=255)
-    procedure_active = models.BooleanField(default=True)
-    procedure_time = models.IntegerField()
-    procedure_price = models.FloatField()
+    name = models.CharField(max_length=255)
+    active = models.BooleanField(default=True)
+    time = models.IntegerField()
+    price = models.FloatField()
 
 
 class Status(models.Model):
