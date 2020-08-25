@@ -2,27 +2,38 @@ from django.db import models
 
 
 class Procedure(models.Model):
+    # 'procedure_id', 'name', ''active', 'time', 'price' 
     procedure_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     active = models.BooleanField(default=True)
     time = models.IntegerField()
     price = models.FloatField()
+    def __str__(self):
+        return self.name
+    
 
 
 class Status(models.Model):
     status_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     active = models.BooleanField(default=True)
-
+    def __str__(self):
+        return self.name
 
 class Payment(models.Model):
+    # 'payment_id', 'name', 'active', 'discount','tax'
     payment_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     active = models.BooleanField(default=True)
     discount = models.FloatField()
     tax = models.FloatField()
+    def __str__(self):
+        return self.name
+
 
 class Company(models.Model):
+    # 'company_id', 'name', 'doc', 'zipcode', 'adress', 'number', 
+    # 'complement', 'district', 'city', 'state', 'phone', 'cellphone', 'active'
     company_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     doc = models.CharField(max_length=14)
@@ -36,9 +47,13 @@ class Company(models.Model):
     phone = models.CharField(max_length=20)
     cellphone = models.CharField(max_length=20)
     active = models.BooleanField(default=True)
+    def __str__(self):
+        return self.name
 
 
 class Employee(models.Model):
+    # 'employee_id', 'company_fk', 'name', 'email', 'password', 'doc', 'phone', 'cellphone',
+    # 'active', 'obs'
     employee_id = models.AutoField(primary_key=True)
     company_fk = models.ForeignKey(Company, models.DO_NOTHING)
     name = models.CharField(max_length=100)
@@ -49,9 +64,13 @@ class Employee(models.Model):
     cellphone = models.CharField(max_length=20)
     active = models.BooleanField(default=True)
     obs = models.TextField()
+    def __str__(self):
+        return self.name
 
 
-class CLient(models.Model):
+class Client(models.Model):
+     # 'client_id', 'company_fk', 'name', 'email', 'birthday', 'dataJoined', 'doc', 'phone', 'cellphone',
+     # 'zipcode', 'adress', 'number', 'complement', 'district', 'city', 'state', 'active', 'obs'
     client_id = models.AutoField(primary_key=True)
     company_fk = models.ForeignKey(Company, models.DO_NOTHING)
     name = models.CharField(max_length=100)
@@ -70,6 +89,8 @@ class CLient(models.Model):
     state = models.CharField(max_length=50)
     active = models.BooleanField(default=True)
     obs = models.TextField()
+    def __str__(self):
+        return self.name
 
 
 
@@ -93,8 +114,7 @@ class CLient(models.Model):
 
 
 
-
-
+'''
 
 
 class AuthGroup(models.Model):
@@ -205,3 +225,4 @@ class DjangoSession(models.Model):
     class Meta:
         managed = False
         db_table = 'django_session'
+'''
