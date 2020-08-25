@@ -36,5 +36,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
-        fields = ['client_id', 'company_fk', 'name', 'email', 'birthday', 'dateJoined', 'doc', 
-        'phone', 'cellphone', 'zipcode', 'adress', 'number', 'complement', 'district', 'city', 'state', 'active', 'obs']
+        fields = ['client_id', 'company_fk', 'name', 'email', 'birthday', 
+        'dateJoined', 'doc', 'phone', 'cellphone', 'zipcode', 'adress', 
+        'number', 'complement', 'district', 'city', 'state', 'active', 'obs']
