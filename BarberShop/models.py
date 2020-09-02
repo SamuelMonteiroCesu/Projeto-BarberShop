@@ -8,6 +8,7 @@ class Procedure(models.Model):
     active = models.BooleanField(default=True)
     time = models.IntegerField()
     price = models.FloatField()
+    #DESCRICAO
     def __str__(self):
         return self.name
     
