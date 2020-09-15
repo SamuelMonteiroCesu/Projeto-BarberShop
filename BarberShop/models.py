@@ -113,7 +113,6 @@ class Client(models.Model):
 
 
 
-
 '''
 
 
