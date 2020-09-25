@@ -1,1 +1,1 @@
-web: gunicorn Projeto-BarberShop.wsgi
+web: gunicorn project.wsgi
