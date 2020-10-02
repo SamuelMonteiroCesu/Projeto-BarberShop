@@ -12,6 +12,7 @@ router.register(r'payment', PaymentViewSet)
 router.register(r'company', CompanyViewSet)
 router.register(r'employee', EmployeeViewSet)
 router.register(r'client', ClientViewSet)
+router.register(r'bugbounty', BugBountyViewSet)
 
 
 urlpatterns = [
