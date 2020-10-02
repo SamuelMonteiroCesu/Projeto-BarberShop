@@ -35,3 +35,7 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
+
+    def destroy(self, request, pk = None):
+        client = client.object.get(client_id = pk)
+
