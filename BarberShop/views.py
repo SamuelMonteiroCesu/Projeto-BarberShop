@@ -46,7 +46,7 @@ class BugBountyViewSet(viewsets.ModelViewSet):
     http_method_names = ['get','post','head']
 
 '''    def destroy(self, request, *args, **kwargs):
-        return Response({'detail': request.method +' << NOT ALLOWED'})
+        return Response({'detail': request.method +' << NOT ALLOWEDs'})
 
     def update(self, request, *args, **kwargs):
         return Response({'detail': request.method +' << NOT ALLOWED'})
