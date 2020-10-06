@@ -84,7 +84,7 @@ class Client(models.Model):
     zipcode = models.CharField(max_length=9, blank=True, null=True)
     adress = models.CharField(max_length=100, blank=True, null=True)
     number = models.CharField(max_length=10, blank=True, null=True)
-    complement = models.CharField(max_length=50, blank=True, null=True)
+    complement = models.CharField(max_length=50, blank=True)
     district = models.CharField(max_length=50, blank=True, null=True)
     city = models.CharField(max_length=50, blank=True, null=True)
     state = models.CharField(max_length=50, blank=True, null=True)

@@ -73,6 +73,7 @@ class ClientViewSet(viewsets.ModelViewSet):
                     client.adress = request.data['adress']
                     client.number = request.data['number']
                     client.district = request.data['district']
+                    client.complement = request.data['complement']
                     client.city = request.data['city']
                     client.state = request.data['state']
                     client.obs = request.data['obs']
