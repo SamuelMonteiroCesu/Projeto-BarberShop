@@ -48,7 +48,6 @@ class ClientViewSet(viewsets.ModelViewSet):
         company = Company()
         try:
             company = Company.objects.get(company_id = 1)
-            print(company.name)
             client = Client.objects.get(doc=request.data['doc'])
             return Response({'CPF Duplicado'})
         except:
