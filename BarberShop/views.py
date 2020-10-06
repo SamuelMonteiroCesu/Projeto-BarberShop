@@ -64,7 +64,7 @@ class ClientViewSet(viewsets.ModelViewSet):
                     client.name = request.data['name']
                     client.email = request.data['email']
                     client.birthday = request.data['birthday']
-                    client.phone = request.data['phone']
+                    #client.phone = request.data['phone']
                     client.cellphone = request.data['cellphone']
                     client.zipcode = request.data['zipcode']
                     client.adress = request.data['adress']
