@@ -6,7 +6,10 @@ from .models import *
 from .serializers import *
 from validate_docbr import CPF
 import datetime
+from django.shortcuts import render
 
+def home (request):
+    return render(request, 'home.html')
 
 # Status Procedure Payment Company Employee Client 
 class StatusViewSet(viewsets.ModelViewSet):

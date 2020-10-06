@@ -1,0 +1,49 @@
+<H1> CADASTRO DE CLIENTE</H1><br>
+
+<form name="cad" action="https://barbershoppi.herokuapp.com/api/client/" method="POST" target="_blank">
+	<input type="text" name=company_fk hidden value="1">
+	<label>Nome</label>
+	<input type="text" name=name><br>
+	<label>Email</label>
+	<input type="text" name=email><br>
+	<label>Nascimento</label>
+	<input type="date" name=birthday><br>
+	<label>CPF (Válido)</label>
+	<input type="text" name=doc><br>
+	<label>Telefone Fixo</label>
+	<input type="text" name=phone><br>
+	<label>Celular</label>
+	<input type="text" name=cellphone><br>
+	<label>CEP</label>
+	<input type="text" name=zipcode><br>
+	<label>Rua</label>
+	<input type="text" name=adress><br>
+	<label> Numero</label>
+	<input type="text" name=number><br>
+	<label>Complemento</label>
+	<input type="text" name=complement><br>
+	<label>Bairro</label>
+	<input type="text" name=district><br>
+	<label>Cidade</label>
+	<input type="text" name=city><br>
+	<label>Estado</label>
+	<input type="text" name=state><br>
+	<label>Observações</label>
+	<textarea name=obs></textarea>
+	<br><br>
+	<button type"submit">Cadastrar</button>
+</form>
+
+
+<H1> BUG BOUNTY SEM O BOUNTY</H1><br>
+
+<form name="bug" action="https://barbershoppi.herokuapp.com/api/bugbounty/" method="POST" target="_blank">
+	<label>Nome</label>
+	<input type="text" name=name><br>
+	<label>Assunto</label>
+	<input type="text" name=subject><br>
+	<label>Descrição</label>
+	<textarea name=description></textarea>
+	<br>
+	<button type"submit">Enviar Erro</button>
+</form>
