@@ -39,3 +39,11 @@ class ClientSerializer(serializers.ModelSerializer):
         fields = ['client_id', 'company_fk', 'name', 'email', 'birthday', 
         'dateJoined', 'doc', 'phone', 'cellphone', 'zipcode', 'adress', 
         'number', 'complement', 'district', 'city', 'state', 'active', 'obs']
+
+
+class BugBountySerializer(serializers.ModelSerializer):
+    class Meta:
+        http_method_name = ['POST','GET',]
+        #'bug_id', 'name', 'content', 'solved'
+        model = BugBounty
+        fields = ['bug_id', 'name', 'subject', 'description']
