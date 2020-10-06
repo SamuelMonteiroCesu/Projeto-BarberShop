@@ -5,6 +5,7 @@ from rest_framework import viewsets
 from .models import *
 from .serializers import *
 from validate_docbr import CPF
+import datetime
 
 
 # Status Procedure Payment Company Employee Client 
@@ -35,13 +36,13 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
 
-
+#'client_id', 'company_fk', 'name', 'email', 'birthday', 
+#'dateJoined', 'doc', 'phone', 'cellphone', 'zipcode', 'adress', 
+#'number', 'complement', 'district', 'city', 'state', 'active', 'obs'
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
-    #'client_id', 'company_fk', 'name', 'email', 'birthday', 
-    #'dateJoined', 'doc', 'phone', 'cellphone', 'zipcode', 'adress', 
-    #'number', 'complement', 'district', 'city', 'state', 'active', 'obs'
+
     def create(self, request, *args, **kwargs):
         cpf = CPF()
         client = Client()
@@ -49,18 +50,30 @@ class ClientViewSet(viewsets.ModelViewSet):
         try:
             company = Company.objects.get(company_id = 1)
             client = Client.objects.get(doc=request.data['doc'])
-            return Response({'CPF Duplicado'})
+            return Response({'400: DUPLICATED *DOC* - CHECK PLEASE'})
         except:
+                
                 if str.isalpha(request.data['name']) == False:
-                    return Response({'Nome invalido'})
+                    return Response({'400: INVALID *NAME* - CHECK PLEASE'})
                 if(cpf.validate(request.data['doc'])):
                     client.company_fk = company
                     client.doc = request.data['doc']
                     client.name = request.data['name']
+                    client.email = request.data['email']
+                    client.birthday = request.data['birthday']
+                    client.phone = request.data['phone']
+                    client.cellphone = request.data['cellphone']
+                    client.zipcode = request.data['zipcode']
+                    client.adress = request.data['adress']
+                    client.number = request.data['number']
+                    client.district = request.data['district']
+                    client.city = request.data['city']
+                    client.state = request.data['state']
+                    client.obs = request.data['obs']
                     client.save()
-                    return Response({'200 status created'})
+                    return Response({'200: CLIENT CREATED'})
                 else:
-                    return Response({'Invalido'})
+                    return Response({'400: INVALID *DOC* - CHECK PLEASE'})
 
 
 class BugBountyViewSet(viewsets.ModelViewSet):
