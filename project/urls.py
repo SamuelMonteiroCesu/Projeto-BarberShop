@@ -17,7 +17,7 @@ router.register(r'bugbounty', BugBountyViewSet)
 
 
 urlpatterns = [
-    path('',views.home),
-    path('api/', include(router.urls)),
+    #path('',views.home),
+    path('', include(router.urls)),
     path('admin/', admin.site.urls),
 ]
