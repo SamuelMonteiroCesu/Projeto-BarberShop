@@ -53,9 +53,9 @@ class ClientViewSet(viewsets.ModelViewSet):
         try:
             company = Company.objects.get(company_id = 1)
             client = Client.objects.get(doc=request.data['doc'])
-            return Response({'400: DUPLICATED *DOC* - CHECK PLEASE'})
         except:
-                
+                if (client != None):
+                    return Response({'400: DUPLICATED *DOCUMENT* - CHECK PLEASE'})
                 if str.isalpha(request.data['name']) == False:
                     return Response({'400: INVALID *NAME* - CHECK PLEASE'})
                 if(cpf.validate(request.data['doc'])):
