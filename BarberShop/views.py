@@ -44,11 +44,12 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 #'dateJoined', 'doc', 'phone', 'cellphone', 'zipcode', 'adress', 
 #'number', 'complement', 'district', 'city', 'state', 'active', 'obs'
 
-@csrf_exempt
+#
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
 
+    #@csrf_exempt
     def create(self, request, *args, **kwargs):
         cpf = CPF()
         client = Client()
