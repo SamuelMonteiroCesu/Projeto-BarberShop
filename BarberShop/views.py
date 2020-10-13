@@ -42,6 +42,7 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 #'client_id', 'company_fk', 'name', 'email', 'birthday', 
 #'dateJoined', 'doc', 'phone', 'cellphone', 'zipcode', 'adress', 
 #'number', 'complement', 'district', 'city', 'state', 'active', 'obs'
+@csrf_exempt
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
