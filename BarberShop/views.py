@@ -7,7 +7,7 @@ from .serializers import *
 from validate_docbr import CPF
 import datetime
 from django.shortcuts import render
-from django.views.decorators.csrf  import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt
 
 def home (request):
     return render(request, 'home.html')
@@ -43,6 +43,7 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 #'client_id', 'company_fk', 'name', 'email', 'birthday', 
 #'dateJoined', 'doc', 'phone', 'cellphone', 'zipcode', 'adress', 
 #'number', 'complement', 'district', 'city', 'state', 'active', 'obs'
+
 @csrf_exempt
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
