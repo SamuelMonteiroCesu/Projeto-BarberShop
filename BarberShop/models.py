@@ -125,9 +125,6 @@ class BugBounty(models.Model):
 
 
 
-'''
-
-
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
 
@@ -236,4 +233,3 @@ class DjangoSession(models.Model):
     class Meta:
         managed = False
         db_table = 'django_session'
-'''
