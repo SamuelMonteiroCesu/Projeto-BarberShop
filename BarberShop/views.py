@@ -27,29 +27,29 @@ class PaymentViewSet(viewsets.ModelViewSet):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
 
-class CompanyViewSet(viewsets.ModelViewSet):
-    queryset = Company.objects.all()
-    serializer_class = CompanySerializer
 
+class AuthUserViewSet(viewsets.ModelViewSet):
+    queryset = AuthUser.objects.all()
+    serializer_class = AuthUserSerializer
+'''
 class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
+'''
 
-
-class EmployeeViewSet(viewsets.ModelViewSet):
-    queryset = Employee.objects.all()
-    serializer_class = EmployeeSerializer
 
 #'client_id', 'company_fk', 'name', 'email', 'birthday', 
 #'dateJoined', 'doc', 'phone', 'cellphone', 'zipcode', 'adress', 
 #'number', 'complement', 'district', 'city', 'state', 'active', 'obs'
 
 #
+'''
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
 
     #@csrf_exempt
+
     def create(self, request, *args, **kwargs):
         cpf = CPF()
         client = Client()
@@ -81,7 +81,7 @@ class ClientViewSet(viewsets.ModelViewSet):
                     return Response({'200: CLIENT CREATED'})
                 else:
                     return Response({'400: INVALID *DOC* - CHECK PLEASE'})
-
+'''
 
 class BugBountyViewSet(viewsets.ModelViewSet):
     #Pode se usar uma flag para controlar o method names e bloquear os methodos a minha escolha

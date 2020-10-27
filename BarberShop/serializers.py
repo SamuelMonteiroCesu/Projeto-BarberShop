@@ -18,6 +18,19 @@ class PaymentSerializer(serializers.ModelSerializer):
         model = Payment
         fields = ['payment_id', 'name', 'active', 'discount','tax']
 
+class BugBountySerializer(serializers.ModelSerializer):
+    class Meta:
+        http_method_name = ['POST','GET',]
+        #'bug_id', 'name', 'content', 'solved'
+        model = BugBounty
+        fields = ['bug_id', 'name', 'subject', 'description']
+
+class AuthUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AuthUser
+        fields = ['first_name', 'last_name', 'email', 'username','password']
+
+'''
 # Status Procedure Payment Company Employee Client
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,9 +54,4 @@ class ClientSerializer(serializers.ModelSerializer):
         'number', 'complement', 'district', 'city', 'state', 'active', 'obs']
 
 
-class BugBountySerializer(serializers.ModelSerializer):
-    class Meta:
-        http_method_name = ['POST','GET',]
-        #'bug_id', 'name', 'content', 'solved'
-        model = BugBounty
-        fields = ['bug_id', 'name', 'subject', 'description']
+'''

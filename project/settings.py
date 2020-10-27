@@ -103,14 +103,7 @@ DATABASES = { 'default': config('DATABASE_URL', default=default_dburl, cast=dbur
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
 
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-}
+
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -158,7 +151,14 @@ CORS_ALLOWED_ORIGINS = [
 django_heroku.settings(locals())
 
 
-
+REST_FRAMEWORK = {
+   # 'DEFAULT_PERMISSION_CLASSES': (
+    #    'rest_framework.permissions.IsAuthenticated',
+   # ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
 
 
 SIMPLE_JWT = {

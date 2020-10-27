@@ -155,16 +155,23 @@ class AuthPermission(models.Model):
 
 
 class AuthUser(models.Model):
-    password = models.CharField(max_length=128)
-    last_login = models.DateTimeField(blank=True, null=True)
-    is_superuser = models.BooleanField()
-    username = models.CharField(unique=True, max_length=150)
+#first_name, last_name, email, username
+    first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     email = models.CharField(max_length=254)
-    is_staff = models.BooleanField()
-    is_active = models.BooleanField()
-    date_joined = models.DateTimeField()
-    first_name = models.CharField(max_length=150)
+    username = models.CharField(unique=True, max_length=150)
+    password = models.CharField(max_length=128)
+
+    last_login = models.DateTimeField(blank=True, null=True)
+    is_staff = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
+    is_superuser = models.BooleanField(default=True)
+    date_joined = models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return self.first_name
+
+
+
 
     class Meta:
         managed = False
