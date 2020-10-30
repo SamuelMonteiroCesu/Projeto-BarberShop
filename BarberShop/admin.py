@@ -8,7 +8,5 @@ from .models import *
 admin.site.register(Status)
 admin.site.register(Procedure)
 admin.site.register(Payment)
-admin.site.register(Company)
-admin.site.register(Employee)
-admin.site.register(Client)
+
 

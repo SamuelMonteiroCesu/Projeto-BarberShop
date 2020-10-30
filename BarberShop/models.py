@@ -32,68 +32,6 @@ class Payment(models.Model):
         return self.name
 
 
-class Company(models.Model):
-    # 'company_id', 'name', 'doc', 'zipcode', 'adress', 'number', 
-    # 'complement', 'district', 'city', 'state', 'phone', 'cellphone', 'active'
-    company_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
-    doc = models.CharField(max_length=14)
-    zipcode = models.CharField(max_length=9)
-    adress = models.CharField(max_length=100)
-    number = models.CharField(max_length=10)
-    complement = models.CharField(max_length=50)
-    district = models.CharField(max_length=50)
-    city = models.CharField(max_length=50)
-    state = models.CharField(max_length=50)
-    phone = models.CharField(max_length=20)
-    cellphone = models.CharField(max_length=20)
-    active = models.BooleanField(default=True)
-    def __str__(self):
-        return self.name
-
-
-class Employee(models.Model):
-    # 'employee_id', 'company_fk', 'name', 'email', 'password', 'doc', 'phone', 'cellphone',
-    # 'active', 'obs'
-    employee_id = models.AutoField(primary_key=True)
-    company_fk = models.ForeignKey(Company, models.DO_NOTHING)
-    name = models.CharField(max_length=100)
-    email = models.CharField(max_length=100)
-    password = models.CharField(max_length=100)
-    doc = models.CharField(max_length=11)
-    phone = models.CharField(max_length=20)
-    cellphone = models.CharField(max_length=20)
-    active = models.BooleanField(default=True)
-    obs = models.TextField()
-    def __str__(self):
-        return self.name
-
-
-class Client(models.Model):
-     # 'client_id', 'company_fk', 'name', 'email', 'birthday', 'dataJoined', 'doc', 'phone', 'cellphone',
-     # 'zipcode', 'adress', 'number', 'complement', 'district', 'city', 'state', 'active', 'obs'
-    client_id = models.AutoField(primary_key=True)
-    company_fk = models.ForeignKey(Company, models.DO_NOTHING)
-    name = models.CharField(max_length=100, blank=True, null=True)
-    email = models.CharField(max_length=100, blank=True, null=True)
-    birthday = models.DateField(blank=True, null=True)
-    dateJoined = models.DateTimeField(auto_now=True, blank=True, null=True)
-    doc = models.CharField(max_length=11, blank=True, null=True)
-    phone = models.CharField(max_length=20, blank=True, null=True)
-    cellphone = models.CharField(max_length=20, blank=True, null=True)
-    zipcode = models.CharField(max_length=9, blank=True, null=True)
-    adress = models.CharField(max_length=100, blank=True, null=True)
-    number = models.CharField(max_length=10, blank=True, null=True)
-    complement = models.CharField(max_length=50, blank=True, null=True)
-    district = models.CharField(max_length=50, blank=True, null=True)
-    city = models.CharField(max_length=50, blank=True, null=True)
-    state = models.CharField(max_length=50, blank=True, null=True)
-    active = models.BooleanField(default=True, blank=True, null=True)
-    obs = models.TextField(blank=True, null=True)
-    def __str__(self):
-        return self.name
-
-
 
 
 class BugBounty(models.Model):
@@ -155,7 +93,7 @@ class AuthPermission(models.Model):
 
 
 class AuthUser(models.Model):
-#first_name, last_name, email, username
+#first_name, last_name, email, username, password, is_staff, is_active, is_superuser
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     email = models.CharField(max_length=254)

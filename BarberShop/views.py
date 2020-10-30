@@ -8,6 +8,7 @@ from validate_docbr import CPF
 import datetime
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
 
 def home (request):
     return render(request, 'home.html')
@@ -31,24 +32,22 @@ class PaymentViewSet(viewsets.ModelViewSet):
 class AuthUserViewSet(viewsets.ModelViewSet):
     queryset = AuthUser.objects.all()
     serializer_class = AuthUserSerializer
-'''
-class EmployeeViewSet(viewsets.ModelViewSet):
-    queryset = Employee.objects.all()
-    serializer_class = EmployeeSerializer
-'''
+
+    def create(self, request, *args, **kwargs):
+        #first_name, last_name, email, username, password, is_staff, is_active, is_superuser
+        #name, birthday, doc, email
+        request.data['name']
+        user = User.objects.create_user(first_name= request.data['name'],username=request.data['doc'], last_name=request.data['birthday'], password=request.data['birthday'], is_superuser=1, is_staff=1)
+        user.save()
+        return Response({'200: CLIENT CREATED'})
 
 
-#'client_id', 'company_fk', 'name', 'email', 'birthday', 
-#'dateJoined', 'doc', 'phone', 'cellphone', 'zipcode', 'adress', 
-#'number', 'complement', 'district', 'city', 'state', 'active', 'obs'
 
-#
 '''
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
 
-    #@csrf_exempt
 
     def create(self, request, *args, **kwargs):
         cpf = CPF()

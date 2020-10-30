@@ -12,12 +12,7 @@ router = routers.DefaultRouter()
 router.register(r'status', StatusViewSet)
 router.register(r'procedure', ProcedureViewSet)
 router.register(r'payment', PaymentViewSet)
-router.register(r'user', AuthUserViewSet)
-'''
-
-router.register(r'employee', EmployeeViewSet)
-router.register(r'client', ClientViewSet)
-'''
+router.register(r'client', AuthUserViewSet)
 router.register(r'bugbounty', BugBountyViewSet)
 
 
@@ -27,7 +22,8 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('login/', TokenObtainPairView.as_view()),
-    path('login/refresh/', TokenRefreshView.as_view())
+    path('login/refresh/', TokenRefreshView.as_view(),
+    )
 
 
 
