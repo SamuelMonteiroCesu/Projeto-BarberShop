@@ -35,7 +35,8 @@ class AuthUserViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         #first_name, last_name, email, username, password, is_staff, is_active, is_superuser
-        #name, birthday, doc, email
+        
+        # name, birthday, doc, email
         user = User()
         try:
             user = User.objects.get(username = request.data['doc'])
@@ -45,7 +46,7 @@ class AuthUserViewSet(viewsets.ModelViewSet):
         print(user)
         if (user.username != ""):
             return Response({'400: DUPLICATED *DOCUMENT* - CHECK PLEASE'})
-        user = User.objects.create_user(first_name= request.data['name'],username=request.data['doc'], last_name=request.data['birthday'], password=request.data['birthday'], is_superuser=1, is_staff=1)
+        user = User.objects.create_user(email = request.data['email'], first_name= request.data['name'],username=request.data['doc'], last_name=request.data['birthday'], password=request.data['birthday'], is_superuser=1, is_staff=1)
         user.save()
         return Response({'200: CLIENT CREATED --' +user.username })
 
