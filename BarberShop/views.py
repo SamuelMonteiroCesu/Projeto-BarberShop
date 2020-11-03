@@ -1,7 +1,7 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from .models import *
 from .serializers import *
 from validate_docbr import CPF
@@ -9,11 +9,13 @@ import datetime
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
+from rest_framework.permissions import IsAuthenticated
 
 def home (request):
     return render(request, 'home.html')
 
 # Status Procedure Payment Company Employee Client 
+@permission_classes([IsAuthenticated])
 class StatusViewSet(viewsets.ModelViewSet):
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
@@ -29,26 +31,25 @@ class PaymentViewSet(viewsets.ModelViewSet):
     serializer_class = PaymentSerializer
 
 
-class AuthUserViewSet(viewsets.ModelViewSet):
+class ClientViewSet(viewsets.ModelViewSet):
     queryset = AuthUser.objects.all()
-    serializer_class = AuthUserSerializer
+    serializer_class = ClientSerializer
 
     def create(self, request, *args, **kwargs):
         #first_name, last_name, email, username, password, is_staff, is_active, is_superuser
-        
-        # name, birthday, doc, email
+        # name, birthday, doc, email, password
         user = User()
         try:
             user = User.objects.get(username = request.data['doc'])
-
         except:
             None
         print(user)
         if (user.username != ""):
             return Response({'400: DUPLICATED *DOCUMENT* - CHECK PLEASE'})
-        user = User.objects.create_user(email = request.data['email'], first_name= request.data['name'],username=request.data['doc'], last_name=request.data['birthday'], password=request.data['birthday'], is_superuser=1, is_staff=1)
+        user = User.objects.create_user(email = request.data['email'], first_name= request.data['name'],username=request.data['doc'], last_name=request.data['birthday'], password=request.data['birthday'], is_superuser=0, is_staff=0)
         user.save()
         return Response({'200: CLIENT CREATED --' +user.username })
+
 
 
 

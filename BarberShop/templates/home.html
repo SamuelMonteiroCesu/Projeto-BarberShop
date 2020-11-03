@@ -1,37 +1,56 @@
 <H1> CADASTRO DE CLIENTE</H1><br>
 
-<form name="cad" action="https://barbershoppi.herokuapp.com/client/" method="POST" target="_blank">
-	<input type="text" name=company_fk hidden value="1">
-	<label>Nome</label>
+<form name="cadClient" action="https://barbershoppi.herokuapp.com/client/" method="POST" target="_blank">
+	<label>Nome -- name</label>
 	<input type="text" name=name><br>
-	<label>Email</label>
-	<input type="text" name=email><br>
-	<label>Nascimento</label>
-	<input type="text" name=birthday><br>
-	<label>CPF (Válido)</label>
+	<label>CPF (Válido) -- doc</label>
 	<input type="text" name=doc><br>
-	<label>Telefone Fixo</label>
-	<input type="password" name=phone><br>
-	<label>Celular</label>
-	<input type="text" name=cellphone><br>
-	<label>CEP</label>
-	<input type="text" name=zipcode><br>
-	<label>Rua</label>
-	<input type="text" name=adress><br>
-	<label> Numero</label>
-	<input type="text" name=number><br>
-	<label>Complemento</label>
-	<input type="text" name=complement><br>
-	<label>Bairro</label>
-	<input type="text" name=district><br>
-	<label>Cidade</label>
-	<input type="text" name=city><br>
-	<label>Estado</label>
-	<input type="text" name=state><br>
-	<label>Observações</label>
-	<textarea name=obs></textarea>
-	<br><br>
+	<label>Nascimento -- birthday</label>
+	<input type="text" name=birthday><br>
+	<label>Email -- email</label>
+	<input type="text" name=email><br>
+	<br>
 	<button type"submit">Cadastrar</button>
+</form>
+
+<!--
+<H1> CADASTRO DE PROFISSIONAL</H1><br>
+<form name="cadUser" action="https://barbershoppi.herokuapp.com/user/" method="POST" target="_blank">
+	<label>Nome -- firstName</label>
+	<input type="text" name=name><br>
+	<label>CPF (Válido) -- doc</label>
+	<input type="text" name=doc><br>
+	<label>Nascimento -- birthday</label>
+	<input type="text" name=birthday><br>
+	<label>Email -- email</label>
+	<input type="text" name=email><br>
+	<label>Password -- password</label>
+	<input type="text" name=Password><br>
+	<label>RPassword -- valida se é igual ao password</label>
+	<input type="text" name=RPassword><br>
+	<br>
+	<button type"submit">Cadastrar</button>
+</form>
+-->
+
+<H1> LOGIN DE PROFISSIONAL</H1><br>
+
+<form name="cadUser" action="https://barbershoppi.herokuapp.com/login/" method="POST" target="_blank">
+	<label>CPF -- username</label>
+	<input type="text" name=username><br>
+	<label>SENHA -- password</label>
+	<input type="password" name=doc><br>
+	<button type"submit">ENTRAR</button>
+</form>
+
+<H1> LOGIN DE CLIENTE</H1><br>
+
+<form name="cadUser" action="https://barbershoppi.herokuapp.com/login/" method="POST" target="_blank">
+	<label>CPF -- username</label>
+	<input type="text" name=username><br>
+	<label>DATA DE NASCIMENTO -- password</label>
+	<input type="text" name=doc><br>
+	<button type"submit">ENTRAR</button>
 </form>
 
 

@@ -25,7 +25,9 @@ class BugBountySerializer(serializers.ModelSerializer):
         model = BugBounty
         fields = ['bug_id', 'name', 'subject', 'description']
 
-class AuthUserSerializer(serializers.ModelSerializer):
+
+
+class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = AuthUser
         fields = ['first_name', 'last_name', 'email', 'username','password']
