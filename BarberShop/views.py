@@ -15,8 +15,9 @@ def home (request):
     return render(request, 'home.html')
 
 # Status Procedure Payment Company Employee Client 
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 class StatusViewSet(viewsets.ModelViewSet):
+    print(IsAuthenticated)
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
 

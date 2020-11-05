@@ -1,66 +1,58 @@
+# This is an auto-generated Django model module.
+# You'll have to do the following manually to clean this up:
+#   * Rearrange models' order
+#   * Make sure each model has one field with primary_key=True
+#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
+#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
+# Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
 
-class Procedure(models.Model):
-    # 'procedure_id', 'name', ''active', 'time', 'price' 
-    procedure_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255)
-    active = models.BooleanField(default=True)
-    time = models.IntegerField()
-    price = models.FloatField()
-    #DESCRICAO
-    def __str__(self):
-        return self.name
-    
-
-
-class Status(models.Model):
-    status_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255)
-    active = models.BooleanField(default=True)
-    def __str__(self):
-        return self.name
-
-class Payment(models.Model):
-    # 'payment_id', 'name', 'active', 'discount','tax'
-    payment_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255)
-    active = models.BooleanField(default=True)
-    discount = models.FloatField()
-    tax = models.FloatField()
-    def __str__(self):
-        return self.name
-
-
-
-
-class BugBounty(models.Model):
-    # 'bug_id', 'name', 'content', 'solved', 'created_at', 'description'
+class BarbershopBugbounty(models.Model):
     bug_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     subject = models.CharField(max_length=255)
-    solved = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now=True)
+    solved = models.BooleanField()
+    created_at = models.DateTimeField()
     description = models.TextField()
-    #DESCRICAO
-    def __str__(self):
-        return self.name
+
+    class Meta:
+        managed = False
+        db_table = 'BarberShop_bugbounty'
 
 
+class BarbershopPayment(models.Model):
+    payment_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    active = models.BooleanField()
+    discount = models.FloatField()
+    tax = models.FloatField()
+
+    class Meta:
+        managed = False
+        db_table = 'BarberShop_payment'
 
 
+class BarbershopProcedure(models.Model):
+    procedure_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    active = models.BooleanField()
+    time = models.IntegerField()
+    price = models.FloatField()
+
+    class Meta:
+        managed = False
+        db_table = 'BarberShop_procedure'
 
 
+class BarbershopStatus(models.Model):
+    status_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    active = models.BooleanField()
 
-
-
-
-
-
-
-
-
-
+    class Meta:
+        managed = False
+        db_table = 'BarberShop_status'
 
 
 class AuthGroup(models.Model):
@@ -93,23 +85,16 @@ class AuthPermission(models.Model):
 
 
 class AuthUser(models.Model):
-#first_name, last_name, email, username, password, is_staff, is_active, is_superuser
-    first_name = models.CharField(max_length=150)
+    password = models.CharField(max_length=128)
+    last_login = models.DateTimeField(blank=True, null=True)
+    is_superuser = models.BooleanField()
+    username = models.CharField(unique=True, max_length=150)
     last_name = models.CharField(max_length=150)
     email = models.CharField(max_length=254)
-    username = models.CharField(unique=True, max_length=150)
-    password = models.CharField(max_length=128)
-    
-    last_login = models.DateTimeField(blank=True, null=True)
-    is_staff = models.BooleanField(default=True)
-    is_active = models.BooleanField(default=True)
-    is_superuser = models.BooleanField(default=True)
-    date_joined = models.DateTimeField(auto_now=True)
-    def __str__(self):
-        return self.first_name
-
-
-
+    is_staff = models.BooleanField()
+    is_active = models.BooleanField()
+    date_joined = models.DateTimeField()
+    first_name = models.CharField(max_length=150)
 
     class Meta:
         managed = False
@@ -134,6 +119,16 @@ class AuthUserUserPermissions(models.Model):
         managed = False
         db_table = 'auth_user_user_permissions'
         unique_together = (('user', 'permission'),)
+
+
+class AuthtokenToken(models.Model):
+    key = models.CharField(primary_key=True, max_length=40)
+    created = models.DateTimeField()
+    user = models.OneToOneField(AuthUser, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'authtoken_token'
 
 
 class DjangoAdminLog(models.Model):
