@@ -93,7 +93,7 @@ class ClientViewSet(viewsets.ModelViewSet):
                 else:
                     return Response({'400: INVALID *DOC* - CHECK PLEASE'})
 '''
-
+@permission_classes([IsAuthenticated])
 class BugBountyViewSet(viewsets.ModelViewSet):
     #Pode se usar uma flag para controlar o method names e bloquear os methodos a minha escolha
     queryset = BugBounty.objects.all()
