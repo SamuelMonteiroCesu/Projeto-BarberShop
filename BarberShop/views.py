@@ -15,18 +15,19 @@ def home (request):
     return render(request, 'home.html')
 
 # Status Procedure Payment Company Employee Client 
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 class StatusViewSet(viewsets.ModelViewSet):
     print(IsAuthenticated)
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
 
 
+@permission_classes([IsAuthenticated])
 class ProcedureViewSet(viewsets.ModelViewSet):
     queryset = Procedure.objects.all()
     serializer_class = ProcedureSerializer
 
-
+@permission_classes([IsAuthenticated])
 class PaymentViewSet(viewsets.ModelViewSet):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
