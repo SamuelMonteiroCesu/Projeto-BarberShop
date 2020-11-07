@@ -18,12 +18,12 @@ class PaymentSerializer(serializers.ModelSerializer):
         model = Payment
         fields = ['payment_id', 'name', 'active', 'discount','tax']
 
-class BugBountySerializer(serializers.ModelSerializer):
-    class Meta:
-        http_method_name = ['POST','GET',]
-        #'bug_id', 'name', 'content', 'solved'
-        model = BugBounty
-        fields = ['bug_id', 'name', 'subject', 'description']
+#class BugBountySerializer(serializers.ModelSerializer):
+ #   class Meta:
+  #      http_method_name = ['POST','GET',]
+   #     #'bug_id', 'name', 'content', 'solved'
+    #    model = BugBounty
+    #    fields = ['bug_id', 'name', 'subject', 'description']
 
 
 

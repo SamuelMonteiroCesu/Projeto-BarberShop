@@ -10,7 +10,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework import status
 def home (request):
     return render(request, 'home.html')
 
@@ -47,10 +47,11 @@ class ClientViewSet(viewsets.ModelViewSet):
             None
         print(user)
         if (user.username != ""):
-            return Response({'400: DUPLICATED *DOCUMENT* - CHECK PLEASE'})
+            return Response(status.HTTP_400_BAD_REQUEST)
         user = User.objects.create_user(email = request.data['email'], first_name= request.data['name'],username=request.data['doc'], last_name=request.data['birthday'], password=request.data['birthday'], is_superuser=0, is_staff=0)
         user.save()
-        return Response({'200: CLIENT CREATED --' +user.username })
+        return Response(status.HTTP_200_OK)
+
 
 
 
@@ -93,12 +94,12 @@ class ClientViewSet(viewsets.ModelViewSet):
                 else:
                     return Response({'400: INVALID *DOC* - CHECK PLEASE'})
 '''
-@permission_classes([IsAuthenticated])
-class BugBountyViewSet(viewsets.ModelViewSet):
-    #Pode se usar uma flag para controlar o method names e bloquear os methodos a minha escolha
-    queryset = BugBounty.objects.all()
-    serializer_class = BugBountySerializer
-    http_method_names = ['get','post','head']
+#@permission_classes([IsAuthenticated])
+#class BugBountyViewSet(viewsets.ModelViewSet):
+ #   #Pode se usar uma flag para controlar o method names e bloquear os methodos a minha escolha
+   # queryset = BugBounty.objects.all()
+  #  serializer_class = BugBountySerializer
+   # http_method_names = ['get','post','head']
 
 '''    def destroy(self, request, *args, **kwargs):
         return Response({'detail': request.method +' << NOT ALLOWEDs'})

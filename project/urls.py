@@ -13,7 +13,7 @@ router.register(r'status', StatusViewSet)
 router.register(r'procedure', ProcedureViewSet)
 router.register(r'payment', PaymentViewSet)
 router.register(r'client', ClientViewSet)
-router.register(r'bugbounty', BugBountyViewSet)
+#router.register(r'bugbounty', BugBountyViewSet)
 #router.register(r'prof', UserViewSet)
 
 

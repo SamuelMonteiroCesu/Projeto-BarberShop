@@ -34,31 +34,17 @@ class Payment(models.Model):
 
 
 
-class BugBounty(models.Model):
+#class BugBounty(models.Model):
     # 'bug_id', 'name', 'content', 'solved', 'created_at', 'description'
-    bug_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255)
-    subject = models.CharField(max_length=255)
-    solved = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now=True)
-    description = models.TextField()
+ #   bug_id = models.AutoField(primary_key=True)
+ #   name = models.CharField(max_length=255)
+ #   subject = models.CharField(max_length=255)
+ #   solved = models.BooleanField(default=False)
+  #  created_at = models.DateTimeField(auto_now=True)
+ #   description = models.TextField()
     #DESCRICAO
-    def __str__(self):
-        return self.name
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ #   def __str__(self):
+  #      return self.name
 
 
 
