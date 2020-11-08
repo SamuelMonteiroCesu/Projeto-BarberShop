@@ -80,6 +80,7 @@ class AuthPermission(models.Model):
 
 class AuthUser(models.Model):
 #first_name, last_name, email, username, password, is_staff, is_active, is_superuser
+#o username sera o cpf e a senha/password e lastname sera utilizado a data de nacimento
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     email = models.CharField(max_length=254)

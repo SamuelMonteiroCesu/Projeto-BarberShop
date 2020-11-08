@@ -40,6 +40,7 @@ class ClientViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         #first_name, last_name, email, username, password, is_staff, is_active, is_superuser
         # name, birthday, doc, email, password
+        #o username sera o cpf e a senha/password e lastname sera utilizado a data de nacimento
         user = User()
         try:
             user = User.objects.get(username = request.data['doc'])
