@@ -202,7 +202,7 @@ class PaymentViewSetTestCase(APITestCase):
 
 class ClientViewSetTestCase(APITestCase):
         
-    list_url = reverse("client-list")
+#    list_url = reverse("Client-list")
 
     def setUp(self):
         self.user = User.objects.create_user(username="davinci",
@@ -218,12 +218,12 @@ class ClientViewSetTestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
 
     def test_client_autorizado(self):
-        response = self.client.get(self.list_url)
+        response = self.client.get("https://barbershoppi.herokuapp.com/client/1/")
         self.assertAlmostEqual(Response.status_code, status.HTTP_200_OK)
     
     def test_client_nao_autorizado(self):
         self.client.force_authenticate(user=None)
-        response = self.client.get(self.list_url)
+        response = self.client.get("https://barbershoppi.herokuapp.com/client/1/")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
     
     def test_client_post(self):
@@ -232,9 +232,15 @@ class ClientViewSetTestCase(APITestCase):
             new_cpf_one = cpf.generate()
             data = {"name": "TesteMask", "birthday": "07/06/90", "email": "teste@teste.com",
                 "doc": new_cpf_one, "password": "pbkdf2_sha256$216000$ZcvhOJYkbZOs$Oc0wUmZRtaVNl0/G/n7hqEqQJnRGzNuwtp3aB+NUHak="}
-        response = self.client.post(self.list_url,data)
+        response = self.client.post('https://barbershoppi.herokuapp.com/client/',data)
         self.assertAlmostEqual(Response.status_code, status.HTTP_200_OK)
 
+    def test_client_cpf_ja_cadastrado(self):
+            for x in range(2):
+                data = {"name": "TesteMask", "birthday": "07/06/90", "email": "teste@teste.com",
+                    "doc": "459.511.030-88", "password": "pbkdf2_sha256$216000$ZcvhOJYkbZOs$Oc0wUmZRtaVNl0/G/n7hqEqQJnRGzNuwtp3aB+NUHak="}
+            response = self.client.post(self.list_url,data)
+            self.assertAlmostEqual(Response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_client_put(self):
         self.client = APIClient()
