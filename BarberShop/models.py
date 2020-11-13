@@ -5,9 +5,9 @@ class Procedure(models.Model):
     # 'procedure_id', 'name', ''active', 'time', 'price' 
     procedure_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
-    active = models.BooleanField(default=True)
-    time = models.IntegerField()
-    price = models.FloatField()
+    active = models.BooleanField(default=True, blank=True, null=True)
+    time = models.IntegerField(, blank=True, null=True)
+    price = models.FloatField(, blank=True, null=True)
     #DESCRICAO
     def __str__(self):
         return self.name
@@ -17,7 +17,7 @@ class Procedure(models.Model):
 class Status(models.Model):
     status_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True, blank=True, null=True)
     def __str__(self):
         return self.name
 
@@ -25,9 +25,9 @@ class Payment(models.Model):
     # 'payment_id', 'name', 'active', 'discount','tax'
     payment_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
-    active = models.BooleanField(default=True)
-    discount = models.FloatField()
-    tax = models.FloatField()
+    active = models.BooleanField(default=True, blank=True, null=True)
+    discount = models.FloatField(, blank=True, null=True)
+    tax = models.FloatField(, blank=True, null=True)
     def __str__(self):
         return self.name
 
