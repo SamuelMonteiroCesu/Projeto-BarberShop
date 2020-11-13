@@ -36,11 +36,12 @@ class PaymentViewSet(viewsets.ModelViewSet):
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = AuthUser.objects.all()
     serializer_class = ClientSerializer
-
     def create(self, request, *args, **kwargs):
         #first_name, last_name, email, username, password, is_staff, is_active, is_superuser
         # name, birthday, doc, email, password
         user = User()
+        print(IsAuthenticated)
+        print(kwargs)
         try:
             user = User.objects.get(username = request.data['doc'])
         except:
