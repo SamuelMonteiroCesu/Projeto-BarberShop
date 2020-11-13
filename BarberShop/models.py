@@ -7,7 +7,7 @@ class Procedure(models.Model):
     name = models.CharField(max_length=255)
     active = models.BooleanField(default=True, blank=True, null=True)
     time = models.IntegerField(blank=True, null=True)
-    price = models.FloatField(lank=True, null=True)
+    price = models.FloatField(blank=True, null=True)
     #DESCRICAO
     def __str__(self):
         return self.name
