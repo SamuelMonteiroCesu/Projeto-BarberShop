@@ -32,7 +32,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
 
-@permission_classes([IsAuthenticated])
+
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = AuthUser.objects.all()
     serializer_class = ClientSerializer

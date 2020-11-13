@@ -1,8 +1,7 @@
 import json
 import random
-from django.test import RequestFactory
-from django.test import Client,TestCase
-from django.contrib.auth.models import User
+import requests
+from django.test import Client, RequestFactory, TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -14,198 +13,250 @@ from validate_docbr import CPF
 from .models import *
 from .views import *
 
+#username=pedrao password=2306star
+class acessoTestCase(APITestCase):
+
+    def test_acesso_permitido(self):
+
+        Token = requests.post('http://localhost:8000/login/',{'username':'pedrao','password':'2306star'})
+        te = Token.json()
+        endpoint_status = "http://localhost:8000/status/"
+        headers={'Authorization': 'Bearer '+ te["access"]}
+
+        res = requests.get(endpoint_status,headers=headers)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+    
+    def test_acesso_negado(self):
+        Token = requests.post('http://localhost:8000/login/',{'username':'','password':'2306star'})
+        te = Token.json()
+        endpoint_status = "http://localhost:8000/status/"
+        headers={'Authorization': 'Bearer '+ te["access"]}
+        res = requests.get(endpoint_status,headers=headers)
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
 
 class statusViewSetTestCase(APITestCase):
-    
-    list_url = reverse("status-list")
-    def setUp(self):
 
-        self.username = 'test'
-        self.password = 'test' 
-        self.email = 'admin@mgmail.com'
+    def test_status_apost(self):
+        Token = requests.post('http://localhost:8000/login/',{'username':'pedrao','password':'2306star'})
+        te = Token.json()
+        print('--------------------texte status post---------------------')
+        endpoint_status = "http://localhost:8000/status/"
+        headers={'Authorization': 'Bearer '+ te["access"]}
+        
+        nomes = ["finalizado", "em andamento", "cancelado", "reagendado"]
+        sta = {'name': random.choice(nomes),'active':random.getrandbits(1)}
+        for x in range (20):
+            res = requests.post(endpoint_status,data = sta,headers=headers)
 
-        self.admin = User.objects.create_superuser(self.username, self.password, self.email)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        #print(resposta.text)
+        #print(resposta.status_code)
 
 
-
-    def test_status_autorizado(self):
-        response = self.client.get(self.list_url)
-        self.assertAlmostEqual(Response.status_code, status.HTTP_200_OK)
-    
-    def test_status_nao_autorizado(self):
-        self.client.force_authenticate(user=None)
-        response = self.client.get(self.list_url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    
-    def test_status_post(self):
-        for x in range(10):
-            nomes = ["finalizado", "em andamento", "a ser feito", "cancelado"]
-            data = {"name": random.choice(nomes)}
-        response = self.client.post(self.list_url,data)
-        self.assertAlmostEqual(Response.status_code, status.HTTP_200_OK)
-
-    def test_status_put(self):
-            self.client = APIClient()
-            self.client.force_authenticate(user=self.admin)
-            factory = APIRequestFactory()
-            request = factory.put('/status/10/', {"status_id":20,"nome":"teste","active":True},format = 'json')
-            response = self.client.get('/status/10/',format='json')
-            #self.assertEqual(response.data, {'id': 4, 'username': 'lauren'})
-            self.assertEqual(len(response.data), 1)
+    def test_status_bput(self):
+        Token = requests.post('http://localhost:8000/login/',{'username':'pedrao','password':'2306star'})
+        te = Token.json()
+        print('--------------------texte status put---------------------')
+        endpoint_status = "http://localhost:8000/status/"
+        headers={'Authorization': 'Bearer '+ te["access"]}
+        nomes = ["finalizado", "em andamento", "cancelado", "reagendado"]
+        sta = {'name': random.choice(nomes),'active':random.getrandbits(1)}
+        tamanho = requests.get(endpoint_status,headers=headers)
+        tama = tamanho.json()
+        t = len(tama) - 15
+        rev_tama = range(t,len(tama))
+        for x in rev_tama:
+            resposta = requests.put(endpoint_status +str(x)+'/' ,data = sta,headers=headers)
+        self.assertEqual(resposta.status_code, status.HTTP_200_OK)
+        #print(resposta.text)
+        #print(resposta.status_code)
 
     def test_status_delete(self):
-        #-detils faz pater de viewset e kwargs e key arguments equal a primery key
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.admin)
-        factory = APIRequestFactory()
-        request = factory.delete('/status/10/')
-        Response = self.client.get('/status/10/')
-        self.assertAlmostEqual(Response.status_code, status.HTTP_404_NOT_FOUND)
+        Token = requests.post('http://localhost:8000/login/',{'username':'pedrao','password':'2306star'})
+        te = Token.json()
+        print('--------------------texte status delete---------------------')
+        endpoint_status = "http://localhost:8000/status/"
+        headers={'Authorization': 'Bearer '+ te["access"]}
+        tamanho = requests.get(endpoint_status,headers=headers)
+        tama = tamanho.json()
+        t = len(tama) - 15
+        rev_tama = range(t,len(tama))
+        for x in rev_tama:
+            r = requests.delete(endpoint_status +str(x)+'/',headers=headers)
+        self.assertEqual(r.status_code, status.HTTP_204_NO_CONTENT)
+
+
+
 
 
 class ProcedureViewSetTestCase(APITestCase):
-    
-    list_url = reverse("procedure-list")
 
-    def setUp(self):
-        self.username = 'test'
-        self.password = 'test' 
-        self.email = 'admin@mgmail.com'
-        self.admin = User.objects.create_superuser(self.username, self.password, self.email)
+    def test_Procedure_apost(self):
+        Token = requests.post('http://localhost:8000/login/',{'username':'pedrao','password':'2306star'})
+        te = Token.json()
+        print('--------------------texte Procedure post---------------------')
+        endpoint_procedure = "http://localhost:8000/procedure/"
+        headers={'Authorization': 'Bearer '+ te["access"]}
+        
+        nomes = ["corte", "barba", "lavar", "pentear"]
+        data = {"name": random.choice(nomes),"time":random.randint(1, 100),"price":random.randint(0,50)}
+        for x in range (20):
+            res = requests.post(endpoint_procedure ,data = data,headers=headers)
+            
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        #print(res.text)
+        #print(res.status_code)
 
-    def test_procedure_autorizado(self):
-        response = self.client.get(self.list_url)
-        self.assertAlmostEqual(Response.status_code, status.HTTP_200_OK)
-    
-    def test_procedure_nao_autorizado(self):
-        self.client.force_authenticate(user=None)
-        response = self.client.get(self.list_url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    
-    def test_procedure_post(self):
-        for x in range(10):
-            nomes = ["corte", "barba", "lavar", "pentear"]
-            time = random.randint(0,50)
-            price = random.uniform(1, 10)
-            data = {"name": random.choice(nomes),"time":time,"price":price}
-        response = self.client.post(self.list_url,data)
-        self.assertAlmostEqual(Response.status_code, status.HTTP_200_OK)
-    
-    def test_procedure_put(self):
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.admin)
-        factory = APIRequestFactory()
-        request = factory.put('/procedure/10/', {"procedure_id":1,"name":"teste","time":30,"price":15})
-        response= self.client.get('/procedure/10/',format='json')
-        self.assertEqual(len(response.data), 1)
+    def test_procedure_bput(self):
+        Token = requests.post('http://localhost:8000/login/',{'username':'pedrao','password':'2306star'})
+        te = Token.json()
+        print('--------------------texte Procedure put---------------------')
+        endpoint_procedure  = "http://localhost:8000/procedure/"
+        headers={'Authorization': 'Bearer '+ te["access"]}
 
+        nomes = ["corte", "barba", "lavar", "pentear"]
+        data = {"name": random.choice(nomes),"time":random.randint(1, 100),"price":random.randint(0,50)}
 
-    #-details faz parte de viewset e kwargs = key arguments equal a primery key
+        tamanho = requests.get(endpoint_procedure,headers=headers)
+        tama = tamanho.json()
+        t = len(tama) - 15
+        rev_tama = range(t,len(tama)) 
+        for x in rev_tama:
+            resposta = requests.put(endpoint_procedure+str(x)+'/' ,data = data,headers=headers)
+
+        self.assertEqual(resposta.status_code, status.HTTP_200_OK)
+        print(resposta.text)
+        print(resposta.status_code)
+
+        
     def test_procedure_delete(self):
-        self.client = APIClient() 
-        self.client.force_authenticate(user=self.admin)
-        factory = APIRequestFactory()
-        request = factory.delete('/procedure/10/')
-        Response = self.client.get('/procedure/10/')
-        self.assertAlmostEqual(Response.status_code, status.HTTP_404_NOT_FOUND)
-
-   
-
+        Token = requests.post('http://localhost:8000/login/',{'username':'pedrao','password':'2306star'})
+        te = Token.json()
+        print('--------------------texte procedure delete---------------------')
+        endpoint_procedure = "http://localhost:8000/procedure/"
+        headers={'Authorization': 'Bearer '+ te["access"]}
+        tamanho = requests.get(endpoint_procedure,headers=headers)
+        tama = tamanho.json()
+        t = len(tama) - 15
+        rev_tama = range(t,len(tama))
+        for x in rev_tama:
+            r = requests.delete(endpoint_procedure +str(x)+'/',headers=headers)
+        self.assertEqual(r.status_code, status.HTTP_204_NO_CONTENT)
 
 class PaymentViewSetTestCase(APITestCase):
-        
-    list_url = reverse("payment-list")
 
-    def setUp(self):
-        self.username = 'test'
-        self.password = 'test' 
-        self.email = 'admin@mgmail.com'
-        self.admin = User.objects.create_superuser(self.username, self.password, self.email)
+    def test_status_apost(self):
+        Token = requests.post('http://localhost:8000/login/',{'username':'pedrao','password':'2306star'})
+        te = Token.json()
 
-    def test_Payment_autorizado(self):
-        response = self.client.get(self.list_url)
-        self.assertAlmostEqual(Response.status_code, status.HTTP_200_OK)
-    
-    def test_Payment_nao_autorizado(self):
-        self.client.force_authenticate(user=None)
-        response = self.client.get(self.list_url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    
-    def test_Payment_post(self):
-        for x in range(10):
-            nomes = ["debito", "credito", "dinheiro"]
-            disconto = random.randint(0,35)
-            data = {"name": random.choice(nomes),"discount":disconto,"tax":disconto}
-        response = self.client.post(self.list_url,data)
-        self.assertAlmostEqual(Response.status_code, status.HTTP_200_OK)
+        print('--------------------texte Payment post---------------------')
+        endpoint_Payment = "http://localhost:8000/payment/"
+        headers={'Authorization': 'Bearer '+ te["access"]}
 
-    def test_Payment_put(self):
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.admin)
-        factory = APIRequestFactory()
-        request = factory.put('/payment/10/', {"Payment_id":1,"name":"teste","discount":30,"tax":15})
-        response= self.client.get('/payment/10/',format='json')
-        self.assertEqual(len(response.data), 1)
-        #self.assertEqual(json.loads(response.content),{"Payment_id":1,"name":"teste","discount":30,"tax":15})
+        nomes = ["debito", "credito", "dinheiro"]
+        disconto = random.randint(0,35)
+        data = {"name": random.choice(nomes),"discount":disconto,"tax":disconto}
 
-#-details faz parte de viewset e kwargs = key arguments equal a primery key
-    def test_Payment_delete(self):
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.admin)
-        factory = APIRequestFactory()
-        request = factory.delete('/payment/10/')
-        Response = self.client.get('/payment/10/')
-        self.assertAlmostEqual(Response.status_code, status.HTTP_404_NOT_FOUND)
+        for x in range (20):
+            res = requests.post(endpoint_Payment,data = data,headers=headers)
 
-class ClientViewSetTestCase(APITestCase):
-        
-   # list_url = reverse("client-list")
-    def setUp(self):
-        self.username = 'test'
-        self.password = 'test' 
-        self.email = 'admin@mgmail.com'
-        self.admin = User.objects.create_superuser(self.username, self.password, self.email)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        #print(res.text)
+        #print(res.status_code)
 
-    def test_client_autorizado(self):
-        response = self.client.get("/client/1/")
-        self.assertAlmostEqual(Response.status_code, status.HTTP_200_OK)
-    
-    def test_client_nao_autorizado(self):
-        self.client.force_authenticate(user=None)
-        response = self.client.get("/client/1/")
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    
-    def test_client_post(self):
-        for x in range(10):
+
+    def test_Payment_bput(self):
+        Token = requests.post('http://localhost:8000/login/',{'username':'pedrao','password':'2306star'})
+        te = Token.json()
+
+        print('--------------------texte Payment put---------------------')
+        endpoint_Payment = "http://localhost:8000/payment/"
+        headers={'Authorization': 'Bearer '+ te["access"]}
+
+        nomes = ["debito", "credito", "dinheiro"]
+        disconto = random.randint(0,35)
+        data = {"name": random.choice(nomes),"discount":disconto,"tax":disconto}
+
+        tamanho = requests.get(endpoint_Payment,headers=headers)
+        tama = tamanho.json()
+        t = len(tama) - 15
+        rev_tama = range(t,len(tama))
+        for x in rev_tama:
+            resposta = requests.put(endpoint_Payment  +str(x)+'/' ,data = data,headers=headers)
+        self.assertEqual(resposta.status_code, status.HTTP_200_OK)
+        #print(resposta.text)
+        #print(resposta.status_code)
+
+    def test_status_delete(self):
+        Token = requests.post('http://localhost:8000/login/',{'username':'pedrao','password':'2306star'})
+        te = Token.json()
+
+        print('--------------------texte Payment delete---------------------')
+        endpoint_Payment = "http://localhost:8000/payment/"
+        headers={'Authorization': 'Bearer '+ te["access"]}
+
+        tamanho = requests.get(endpoint_Payment,headers=headers)
+        tama = tamanho.json()
+        t = len(tama) - 15
+        rev_tama = range(t,len(tama))
+        for x in rev_tama:
+            r = requests.delete(endpoint_Payment +str(x)+'/',headers=headers)
+        self.assertEqual(r.status_code, status.HTTP_204_NO_CONTENT)
+
+class ClintViewSetTestCase(APITestCase):
+
+    def test_status_apost(self):
+
+        print('--------------------texte client post---------------------')
+        endpoint_client = "http://localhost:8000/client/"
+
+        cpf = CPF()
+        new_cpf_one = cpf.generate()
+        data = {"name": "TesteMask", "birthday": "07/06/90", "email": "teste@teste.com",
+        "doc": new_cpf_one, "password": "pbkdf2_sha256$216000$ZcvhOJYkbZOs$Oc0wUmZRtaVNl0/G/n7hqEqQJnRGzNuwtp3aB+NUHak="}
+
+        for x in range (20):
+            res = requests.post(endpoint_client,data = data)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        #print(res.text)
+        #print(res.status_code)
+
+
+    def test_Payment_bput(self):
+        print('--------------------texte client put---------------------')
+        endpoint_client = "http://localhost:8000/client/"
+            
+        cpf = CPF()
+        new_cpf_one = cpf.generate()
+        data = {"name": "Teste", "birthday": "01/01/20", "email": "teste@teste.com",
+        "doc": new_cpf_one, "password": "pbkdf2_sha256$216000$ZcvhOJYkbZOs$Oc0wUmZRtaVNl0/G/n7hqEqQJnRGzNuwtp3aB+NUHak="}
+
+        tamanho = requests.get(endpoint_client,headers=headers)
+        tama = tamanho.json()
+        t = len(tama) - 15
+        rev_tama = range(t,len(tama))
+        for x in rev_tama:
             cpf = CPF()
             new_cpf_one = cpf.generate()
-            data = {"name": "TesteMask", "birthday": "07/06/90", "email": "teste@teste.com",
-                "doc": new_cpf_one, "password": "pbkdf2_sha256$216000$ZcvhOJYkbZOs$Oc0wUmZRtaVNl0/G/n7hqEqQJnRGzNuwtp3aB+NUHak="}
-        response = self.client.post('/client/',data)
-        self.assertAlmostEqual(Response.status_code, status.HTTP_200_OK)
+            data = {"name": "Teste", "birthday": "01/01/20", "email": "teste@teste.com",
+            "doc": new_cpf_one, "password": "pbkdf2_sha256$216000$ZcvhOJYkbZOs$Oc0wUmZRtaVNl0/G/n7hqEqQJnRGzNuwtp3aB+NUHak="}
 
-    def test_client_put(self):
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.admin)
-        factory = APIRequestFactory()
-        request = factory.put('/client/10/', {"name":"teste", "birthday": "25/07/90", "email": "teste@teste.com",})
-        response= self.client.get('/client/10/',format='json')
-        self.assertEqual(len(response.data), 1)
+            resposta = requests.put(endpoint_client  +str(x)+'/' ,data = data,headers=headers)
+        self.assertEqual(resposta.status_code, status.HTTP_200_OK)
+        #print(resposta.text)
+        #print(resposta.status_code)
 
-    def test_client_delete(self):
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.admin)
-        factory = APIRequestFactory()
-        request = factory.delete('/client/10/')
-        Response = self.client.get('/client/10/')
-        self.assertAlmostEqual(Response.status_code, status.HTTP_404_NOT_FOUND)
-
-    #-details faz parte de viewset e kwargs = key arguments equal a primery key
-'''
-    def test_client_cpf_ja_cadastrado(self):
-            for x in range(2):
-                data = {"name": "TesteMask", "birthday": "07/06/90", "email": "teste@teste.com",
-                    "doc": "459.511.030-88", "password": "pbkdf2_sha256$216000$ZcvhOJYkbZOs$Oc0wUmZRtaVNl0/G/n7hqEqQJnRGzNuwtp3aB+NUHak="}
-            response = self.client.post('/client/',data)
-            self.assertAlmostEqual(Response.status_code, status.HTTP_400_BAD_REQUEST)
-'''
+    def test_status_delete(self):
+        print('--------------------texte client delete---------------------')
+        endpoint_client = "http://localhost:8000/client/"
+            
+        tamanho = requests.get(endpoint_client)
+        tama = tamanho.json()
+        t = len(tama) - 15
+        rev_tama = range(t,len(tama))
+        for x in rev_tama:
+            r = requests.delete(endpoint_client +str(x)+'/')
+        self.assertEqual(r.status_code, status.HTTP_204_NO_CONTENT)
