@@ -6,8 +6,8 @@ class Procedure(models.Model):
     procedure_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     active = models.BooleanField(default=True, blank=True, null=True)
-    time = models.IntegerField(, blank=True, null=True)
-    price = models.FloatField(, blank=True, null=True)
+    time = models.IntegerField(blank=True, null=True)
+    price = models.FloatField(lank=True, null=True)
     #DESCRICAO
     def __str__(self):
         return self.name
@@ -26,8 +26,8 @@ class Payment(models.Model):
     payment_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     active = models.BooleanField(default=True, blank=True, null=True)
-    discount = models.FloatField(, blank=True, null=True)
-    tax = models.FloatField(, blank=True, null=True)
+    discount = models.FloatField(blank=True, null=True)
+    tax = models.FloatField(blank=True, null=True)
     def __str__(self):
         return self.name
 
