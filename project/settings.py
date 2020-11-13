@@ -129,7 +129,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "https://ebenezer-barbershop.herokuapp.com",
     "https://ebenezer-barbershop.herokuapp.com/",
-    "*",
 ]
 
 django_heroku.settings(locals())
