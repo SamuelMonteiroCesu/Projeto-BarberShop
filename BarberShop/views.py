@@ -6,6 +6,7 @@ from .models import *
 from .serializers import *
 from validate_docbr import CPF
 import datetime
+import json
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
@@ -17,9 +18,26 @@ def home (request):
 # Status Procedure Payment Company Employee Client 
 @permission_classes([IsAuthenticated])
 class StatusViewSet(viewsets.ModelViewSet):
-    print(IsAuthenticated)
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
+
+
+    def list(self, request):
+
+        data = {}
+        data['user'] = []
+        data['user'].append(request.user.first_name)
+        data['user'].append(request.user.id)
+        queryset = Status.objects.all()
+        serializer = StatusSerializer(queryset,many=True)
+        data['data'] = serializer.data
+        print("---------------")
+        print(data)
+        usuario = User.objects.get(id = request.user.id)
+        print(usuario)
+        print("---------------")
+        return Response(data)
+
 
 
 @permission_classes([IsAuthenticated])
@@ -33,9 +51,12 @@ class PaymentViewSet(viewsets.ModelViewSet):
     serializer_class = PaymentSerializer
 
 
+
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = AuthUser.objects.all()
     serializer_class = ClientSerializer
+
+
     def create(self, request, *args, **kwargs):
         #first_name, last_name, email, username, password, is_staff, is_active, is_superuser
         # name, birthday, doc, email, password
