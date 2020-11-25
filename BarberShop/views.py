@@ -23,7 +23,6 @@ class StatusViewSet(viewsets.ModelViewSet):
 
 
     def list(self, request):
-
         data = {}
         data['user'] = []
         data['user'].append(request.user.first_name)
