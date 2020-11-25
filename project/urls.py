@@ -20,6 +20,7 @@ router.register(r'bugbounty', BugBountyViewSet)
 urlpatterns = [
     
     path('test/',views.home),
+    path('getuser/',views.GetUserViewSet),
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('login/', TokenObtainPairView.as_view()),
