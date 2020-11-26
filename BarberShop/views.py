@@ -12,9 +12,30 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
+from .utility import *
+import random
 
 def home (request):
     return render(request, 'home.html')
+
+@api_view(['POST',])
+def PassRecoverViewSet(request):
+    try:
+        user = User.objects.get(username = request.data['CPF'],email = request.data['email'],is_staff = True)
+    except:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+    
+    x = str(random.randint(10000000,99999999))
+    user.password = x
+    user.set_password(user.password)
+    subject = "BARBEARIA EBENEZER | RECUPERAÇÃO DE SENHA!"
+    content = "Sua nova senha é: "+x
+    u = Emails().sendmails(user.email,subject,content)
+    user.save()
+
+    
+    return Response("Ok")
+
 
 @api_view(['GET',])
 @permission_classes([IsAuthenticated])
