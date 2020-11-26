@@ -22,6 +22,7 @@ urlpatterns = [
     path('test/',views.home),
     path('getuser/',views.GetUserViewSet),
     path('passrecover/',views.PassRecoverViewSet),
+    path('passchange/',views.PassChangeViewSet),
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('login/', TokenObtainPairView.as_view()),

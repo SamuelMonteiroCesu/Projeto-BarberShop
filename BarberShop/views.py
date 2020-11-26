@@ -32,9 +32,7 @@ def PassRecoverViewSet(request):
     content = "Sua nova senha é: "+x
     u = Emails().sendmails(user.email,subject,content)
     user.save()
-
-    
-    return Response("Ok")
+    return Response("Senha enviada para o seu Email")
 
 
 @api_view(['GET',])
@@ -46,6 +44,19 @@ def GetUserViewSet(request):
         return Response(status = status.HTTP_404_NOT_FOUND)
     serializer = ClientSerializer(user)
     return Response(serializer.data)
+
+
+@api_view(['POST',])
+@permission_classes([IsAuthenticated])
+def PassChangeViewSet(request):
+    try:
+        user = User.objects.get(id = request.user.id)
+    except:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+    user.password = request.data['newpassword']
+    user.set_password(user.password)
+    user.save()
+    return Response("Senha alterada com sucesso")
 
 
 # Status Procedure Payment Company Employee Client 
