@@ -194,6 +194,8 @@ class Appointment(models.Model):
     def __str__(self):
         return str(self.apphour)
 
+    def get_apphour(self):
+        return self.__apphour
 
 
 class Schedule(models.Model):

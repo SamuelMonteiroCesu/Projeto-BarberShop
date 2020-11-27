@@ -60,9 +60,9 @@ def PassChangeViewSet(request):
 
 
 @api_view(['GET',])
+@permission_classes([IsAuthenticated])
 def FreescheduleViewSet(request):
     free = []
-    app = Appointment()
     weekday = Time().convertweekday(request.data['date'])
     try:
         schedule = Schedule.objects.all().filter(professional=request.data['professional']).filter(weekday=weekday)
@@ -74,7 +74,17 @@ def FreescheduleViewSet(request):
     busy = list(busy)
     for i in schedule:
         free += Time().FreeSchedule(i,busy)
-    return Response(free)
+    for i in free:
+        app = Appointment()
+        print(i)
+        app.apphour = i
+        busy.append(app)
+    busy = sorted(busy,key = lambda x: x.apphour)
+    busy = AppointmentSerializer(busy,many = True)
+    if request.user.is_staff:
+        return Response(busy.data)
+    else:
+        return Response(free)
 
 
 
