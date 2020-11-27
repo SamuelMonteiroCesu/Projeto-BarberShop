@@ -64,19 +64,28 @@ def PassChangeViewSet(request):
 def FreescheduleViewSet(request):
     free = []
     weekday = Time().convertweekday(request.data['date'])
+    dayoff = []
     try:
-        schedule = Schedule.objects.all().filter(professional=request.data['professional']).filter(weekday=weekday)
+        dayoff = DayOff.objects.filter(daydate = request.data['date']).filter(professional=request.data['professional'])
+        schedule = Schedule.objects.filter(professional=request.data['professional']).filter(weekday=weekday)
         #schedule = Schedule.objects.get(professional=request.data['professional'] , weekday=weekday)
-        busy = Appointment.objects.all().filter(professional=request.data['professional']).filter(appdate = request.data['date'])
+        busy = Appointment.objects.filter(professional=request.data['professional']).filter(appdate = request.data['date'])
 
     except:
         pass
+    #dayoff = list(dayoff)
+    #if request.user.is_staff == False:
+    if len(dayoff) >= 1 and request.user.is_staff == False:
+        print('---------------'+request.user.username)
+        for i in dayoff:
+            return Response(i.reason)
+        
+
     busy = list(busy)
     for i in schedule:
         free += Time().FreeSchedule(i,busy)
     for i in free:
         app = Appointment()
-        print(i)
         app.apphour = i
         busy.append(app)
     busy = sorted(busy,key = lambda x: x.apphour)

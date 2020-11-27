@@ -215,3 +215,4 @@ class DayOff (models.Model):
     reason = models.CharField(max_length=255)
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now=True)
+    
