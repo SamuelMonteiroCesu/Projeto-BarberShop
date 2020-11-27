@@ -59,6 +59,26 @@ def PassChangeViewSet(request):
     return Response("Senha alterada com sucesso")
 
 
+@api_view(['GET',])
+def FreescheduleViewSet(request):
+    free = []
+    app = Appointment()
+    weekday = Time().convertweekday(request.data['date'])
+    try:
+        schedule = Schedule.objects.all().filter(professional=request.data['professional']).filter(weekday=weekday)
+        #schedule = Schedule.objects.get(professional=request.data['professional'] , weekday=weekday)
+        busy = Appointment.objects.all().filter(professional=request.data['professional']).filter(appdate = request.data['date'])
+
+    except:
+        pass
+    busy = list(busy)
+    for i in schedule:
+        free += Time().FreeSchedule(i,busy)
+    return Response(free)
+
+
+
+
 # Status Procedure Payment Company Employee Client 
 @permission_classes([IsAuthenticated])
 class StatusViewSet(viewsets.ModelViewSet):
@@ -133,3 +153,17 @@ class BugBountyViewSet(viewsets.ModelViewSet):
 
     def partial_update(self, request, *args, **kwargs):
         return Response({'detail': request.method +' << NOT ALLOWED'})'''
+
+
+
+class AppointmentViewSet(viewsets.ModelViewSet):
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentSerializer
+
+class ScheduleViewSet(viewsets.ModelViewSet):
+    queryset = Schedule.objects.all()
+    serializer_class = ScheduleSerializer
+
+class DayOffViewSet(viewsets.ModelViewSet):
+    queryset = DayOff.objects.all()
+    serializer_class = DayOffSerializer

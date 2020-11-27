@@ -14,6 +14,9 @@ router.register(r'procedure', ProcedureViewSet)
 router.register(r'payment', PaymentViewSet)
 router.register(r'client', ClientViewSet)
 router.register(r'bugbounty', BugBountyViewSet)
+router.register(r'schedule', ScheduleViewSet)
+router.register(r'appointment', AppointmentViewSet)
+router.register(r'dayoff', DayOffViewSet)
 #router.register(r'prof', UserViewSet)
 
 
@@ -23,6 +26,7 @@ urlpatterns = [
     path('getuser/',views.GetUserViewSet),
     path('passrecover/',views.PassRecoverViewSet),
     path('passchange/',views.PassChangeViewSet),
+    path('freeschedule/',views.FreescheduleViewSet),
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('login/', TokenObtainPairView.as_view()),
