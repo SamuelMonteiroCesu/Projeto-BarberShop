@@ -144,13 +144,13 @@ class ClientViewSet(viewsets.ModelViewSet):
         # name, birthday, doc, email, password
         user = User()
         try:
-            user = User.objects.get(username = request.data['doc'])
+            user = User.objects.get(username = request.data['username'])
         except:
             None
         print(user)
         if (user.username != ""):
             return Response({'400: DUPLICATED *DOCUMENT* - CHECK PLEASE'})
-        user = User.objects.create_user(email = request.data['email'], first_name= request.data['name'],username=request.data['doc'], last_name=request.data['birthday'], password=request.data['birthday'], is_superuser=0, is_staff=0)
+        user = User.objects.create_user(email = request.data['email'], first_name= request.data['first_name'],username=request.data['doc'], last_name=request.data['last_name'], password=request.data['last_name'], is_superuser=0, is_staff=0)
         user.save()
         return Response({'200: CLIENT CREATED --' +user.username })
 
