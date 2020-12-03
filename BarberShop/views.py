@@ -97,6 +97,42 @@ def FreescheduleViewSet(request):
 
 
 
+@api_view(['GET',])
+@permission_classes([IsAuthenticated])
+def MyScheduleViewSet(request):
+    free = []
+    weekday = Time().convertweekday(request.data['date'])
+    dayoff = []
+    try:
+        dayoff = DayOff.objects.filter(daydate = request.data['date']).filter(professional=request.user.id)
+        schedule = Schedule.objects.filter(professional=request.user.id).filter(weekday=weekday)
+        busy = Appointment.objects.filter(professional=request.user.id).filter(appdate = request.data['date'])
+
+    except:
+        pass
+    if len(dayoff) >= 1 and request.user.is_staff == False:
+        print('---------------'+request.user.username)
+        for i in dayoff:
+            return Response(i.reason)
+        
+    busy = list(busy)
+    busyclient = []
+    for i in schedule:
+        free += Time().FreeSchedule(i,busy)
+    for i in free:
+        app = Appointment()
+        app.apphour = i
+        app.appdate = request.data['date']
+        busyclient.append(app)
+    busy += busyclient
+    busy = sorted(busy,key = lambda x: x.apphour)
+    busy = AppointmentSerializer(busy,many = True)
+    print("---------------")
+    print(request.user.username)
+    print(request.user.is_staff)
+    print("---------------")
+    return Response(busy.data)
+
 
 # Status Procedure Payment Company Employee Client 
 @permission_classes([IsAuthenticated])

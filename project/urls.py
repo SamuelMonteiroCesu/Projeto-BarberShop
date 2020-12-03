@@ -27,6 +27,7 @@ urlpatterns = [
     path('passrecover/',views.PassRecoverViewSet),
     path('passchange/',views.PassChangeViewSet),
     path('freeschedule/',views.FreescheduleViewSet),
+    path('myschedule/',views.MyScheduleViewSet),
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('login/', TokenObtainPairView.as_view()),
