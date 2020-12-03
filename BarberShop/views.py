@@ -101,12 +101,12 @@ def FreescheduleViewSet(request):
 @permission_classes([IsAuthenticated])
 def MyScheduleViewSet(request):
     free = []
-    weekday = Time().convertweekday(request.data['date'])
+    weekday = Time().convertweekday(request.data['deite'])
     dayoff = []
     try:
-        dayoff = DayOff.objects.filter(daydate = request.data['date']).filter(professional=request.user.id)
+        dayoff = DayOff.objects.filter(daydate = request.data['deite']).filter(professional=request.user.id)
         schedule = Schedule.objects.filter(professional=request.user.id).filter(weekday=weekday)
-        busy = Appointment.objects.filter(professional=request.user.id).filter(appdate = request.data['date'])
+        busy = Appointment.objects.filter(professional=request.user.id).filter(appdate = request.data['deite'])
 
     except:
         pass
@@ -122,7 +122,7 @@ def MyScheduleViewSet(request):
     for i in free:
         app = Appointment()
         app.apphour = i
-        app.appdate = request.data['date']
+        app.appdate = request.data['deite']
         busyclient.append(app)
     busy += busyclient
     busy = sorted(busy,key = lambda x: x.apphour)
