@@ -62,6 +62,8 @@ def PassChangeViewSet(request):
 @api_view(['GET',])
 @permission_classes([IsAuthenticated])
 def FreescheduleViewSet(request):
+    print(request.data)
+
     free = []
     weekday = Time().convertweekday(request.data['date'])
     dayoff = []
