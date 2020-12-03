@@ -103,6 +103,9 @@ def FreescheduleViewSet(request):
 @api_view(['GET',])
 @permission_classes([IsAuthenticated])
 def MyScheduleViewSet(request):
+    print('------------------------')
+    print(request.data)
+    print('------------------------')
     free = []
     weekday = Time().convertweekday(request.data['deite'])
     dayoff = []
