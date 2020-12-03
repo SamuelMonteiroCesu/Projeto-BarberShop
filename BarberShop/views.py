@@ -68,13 +68,10 @@ def FreescheduleViewSet(request):
     try:
         dayoff = DayOff.objects.filter(daydate = request.data['date']).filter(professional=request.data['professional'])
         schedule = Schedule.objects.filter(professional=request.data['professional']).filter(weekday=weekday)
-        #schedule = Schedule.objects.get(professional=request.data['professional'] , weekday=weekday)
         busy = Appointment.objects.filter(professional=request.data['professional']).filter(appdate = request.data['date'])
 
     except:
         pass
-    #dayoff = list(dayoff)
-    #if request.user.is_staff == False:
     if len(dayoff) >= 1 and request.user.is_staff == False:
         print('---------------'+request.user.username)
         for i in dayoff:
@@ -87,6 +84,7 @@ def FreescheduleViewSet(request):
     for i in free:
         app = Appointment()
         app.apphour = i
+        app.appdate = request.data['date']
         busyclient.append(app)
     busy += busyclient
     busy = sorted(busy,key = lambda x: x.apphour)
