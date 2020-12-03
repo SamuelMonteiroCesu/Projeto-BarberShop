@@ -30,5 +30,19 @@ class PaymentSerializer(serializers.ModelSerializer):
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = AuthUser
-        fields = ['first_name', 'last_name', 'email', 'username','password']
+        fields = ['id','first_name', 'last_name', 'email', 'username','password','is_staff']
 
+class ScheduleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Schedule
+        fields = "__all__"
+
+class AppointmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Appointment
+        fields = "__all__"
+
+class DayOffSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DayOff
+        fields = "__all__"

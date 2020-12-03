@@ -6,20 +6,120 @@ from .models import *
 from .serializers import *
 from validate_docbr import CPF
 import datetime
+from rest_framework import status
+import json
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
+from .utility import *
+import random
+
 def home (request):
     return render(request, 'home.html')
+
+@api_view(['POST',])
+def PassRecoverViewSet(request):
+    try:
+        user = User.objects.get(username = request.data['CPF'],email = request.data['email'],is_staff = True)
+    except:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+    
+    x = str(random.randint(10000000,99999999))
+    user.password = x
+    user.set_password(user.password)
+    subject = "BARBEARIA EBENEZER | RECUPERAÇÃO DE SENHA!"
+    content = "Sua nova senha é: "+x
+    u = Emails().sendmails(user.email,subject,content)
+    user.save()
+    return Response("Senha enviada para o seu Email")
+
+
+@api_view(['GET',])
+@permission_classes([IsAuthenticated])
+def GetUserViewSet(request):
+    try:
+        user = User.objects.get(id = request.user.id)
+    except:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+    serializer = ClientSerializer(user)
+    return Response(serializer.data)
+
+
+@api_view(['POST',])
+@permission_classes([IsAuthenticated])
+def PassChangeViewSet(request):
+    try:
+        user = User.objects.get(id = request.user.id)
+    except:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+    user.password = request.data['newpassword']
+    user.set_password(user.password)
+    user.save()
+    return Response("Senha alterada com sucesso")
+
+
+@api_view(['GET',])
+@permission_classes([IsAuthenticated])
+def FreescheduleViewSet(request):
+    free = []
+    weekday = Time().convertweekday(request.data['date'])
+    dayoff = []
+    try:
+        dayoff = DayOff.objects.filter(daydate = request.data['date']).filter(professional=request.data['professional'])
+        schedule = Schedule.objects.filter(professional=request.data['professional']).filter(weekday=weekday)
+        #schedule = Schedule.objects.get(professional=request.data['professional'] , weekday=weekday)
+        busy = Appointment.objects.filter(professional=request.data['professional']).filter(appdate = request.data['date'])
+
+    except:
+        pass
+    #dayoff = list(dayoff)
+    #if request.user.is_staff == False:
+    if len(dayoff) >= 1 and request.user.is_staff == False:
+        print('---------------'+request.user.username)
+        for i in dayoff:
+            return Response(i.reason)
+        
+
+    busy = list(busy)
+    for i in schedule:
+        free += Time().FreeSchedule(i,busy)
+    for i in free:
+        app = Appointment()
+        app.apphour = i
+        busy.append(app)
+    busy = sorted(busy,key = lambda x: x.apphour)
+    busy = AppointmentSerializer(busy,many = True)
+    if request.user.is_staff:
+        return Response(busy.data)
+    else:
+        return Response(free)
+
+
+
 
 # Status Procedure Payment Company Employee Client 
 @permission_classes([IsAuthenticated])
 class StatusViewSet(viewsets.ModelViewSet):
-    print(IsAuthenticated)
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
+
+'''
+    def list(self, request):
+        data = {}
+        data['user'] = []
+        data['user'].append(request.user.first_name)
+        data['user'].append(request.user.id)
+        queryset = Status.objects.all()
+        serializer = StatusSerializer(queryset,many=True)
+        data['data'] = serializer.data
+        print("---------------")
+        print(data)
+        usuario = User.objects.get(id = request.user.id)
+        print(usuario)
+        print("---------------")
+        return Response(data)
+'''
 
 
 @permission_classes([IsAuthenticated])
@@ -33,9 +133,11 @@ class PaymentViewSet(viewsets.ModelViewSet):
     serializer_class = PaymentSerializer
 
 
+
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = AuthUser.objects.all()
     serializer_class = ClientSerializer
+
 
     def create(self, request, *args, **kwargs):
         #first_name, last_name, email, username, password, is_staff, is_active, is_superuser
@@ -43,66 +145,28 @@ class ClientViewSet(viewsets.ModelViewSet):
         #o username sera o cpf e a senha/password e lastname sera utilizado a data de nacimento
         user = User()
         try:
-            user = User.objects.get(username = request.data['doc'])
+            user = User.objects.get(username = request.data['username'])
         except:
             None
         print(user)
         if (user.username != ""):
-            return Response(status.HTTP_400_BAD_REQUEST)
-        user = User.objects.create_user(email = request.data['email'], first_name= request.data['name'],username=request.data['doc'], last_name=request.data['birthday'], password=request.data['birthday'], is_superuser=0, is_staff=0)
+            return Response({'400: DUPLICATED *DOCUMENT* - CHECK PLEASE'})
+        user = User.objects.create_user(email = request.data['email'], first_name= request.data['first_name'],username=request.data['username'], last_name=request.data['last_name'], password=request.data['last_name'], is_superuser=0, is_staff=0)
         user.save()
         return Response(status.HTTP_200_OK)
 
 
 
 
-
 '''
-class ClientViewSet(viewsets.ModelViewSet):
-    queryset = Client.objects.all()
-    serializer_class = ClientSerializer
+@permission_classes([IsAuthenticated])
+class BugBountyViewSet(viewsets.ModelViewSet):
+    #Pode se usar uma flag para controlar o method names e bloquear os methodos a minha escolha
+    queryset = BugBounty.objects.all()
+    serializer_class = BugBountySerializer
+    http_method_names = ['get','post','head']
 
-
-    def create(self, request, *args, **kwargs):
-        cpf = CPF()
-        client = Client()
-        company = Company()
-        try:
-            company = Company.objects.get(company_id = 1)
-            client = Client.objects.get(doc=request.data['doc'])
-        except:
-                if (client != None):
-                    return Response({'400: DUPLICATED *DOCUMENT* - CHECK PLEASE'})
-                if str.isalpha(request.data['name']) == False:
-                    return Response({'400: INVALID *NAME* - CHECK PLEASE'})
-                if(cpf.validate(request.data['doc'])):
-                    client.company_fk = company
-                    client.doc = request.data['doc']
-                    client.name = request.data['name']
-                    client.email = request.data['email']
-                    #client.birthday = request.data['birthday']
-                    client.phone = request.data['phone']
-                    client.cellphone = request.data['cellphone']
-                    client.zipcode = request.data['zipcode']
-                    client.adress = request.data['adress']
-                    client.number = request.data['number']
-                    client.district = request.data['district']
-                    client.city = request.data['city']
-                    client.state = request.data['state']
-                    client.obs = request.data['obs']
-                    client.save()
-                    return Response({'200: CLIENT CREATED'})
-                else:
-                    return Response({'400: INVALID *DOC* - CHECK PLEASE'})
-'''
-#@permission_classes([IsAuthenticated])
-#class BugBountyViewSet(viewsets.ModelViewSet):
- #   #Pode se usar uma flag para controlar o method names e bloquear os methodos a minha escolha
-   # queryset = BugBounty.objects.all()
-  #  serializer_class = BugBountySerializer
-   # http_method_names = ['get','post','head']
-
-'''    def destroy(self, request, *args, **kwargs):
+    def destroy(self, request, *args, **kwargs):
         return Response({'detail': request.method +' << NOT ALLOWEDs'})
 
     def update(self, request, *args, **kwargs):
@@ -110,3 +174,17 @@ class ClientViewSet(viewsets.ModelViewSet):
 
     def partial_update(self, request, *args, **kwargs):
         return Response({'detail': request.method +' << NOT ALLOWED'})'''
+
+
+
+class AppointmentViewSet(viewsets.ModelViewSet):
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentSerializer
+
+class ScheduleViewSet(viewsets.ModelViewSet):
+    queryset = Schedule.objects.all()
+    serializer_class = ScheduleSerializer
+
+class DayOffViewSet(viewsets.ModelViewSet):
+    queryset = DayOff.objects.all()
+    serializer_class = DayOffSerializer

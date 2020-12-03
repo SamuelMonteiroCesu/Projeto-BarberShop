@@ -1,13 +1,12 @@
 from django.db import models
 
-
 class Procedure(models.Model):
     # 'procedure_id', 'name', ''active', 'time', 'price' 
     procedure_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     active = models.BooleanField(default=True)
-    time = models.IntegerField()
-    price = models.FloatField()
+    time = models.IntegerField(blank=True, null=True)
+    price = models.FloatField(blank=True, null=True)
     #DESCRICAO
     def __str__(self):
         return self.name
@@ -26,8 +25,8 @@ class Payment(models.Model):
     payment_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     active = models.BooleanField(default=True)
-    discount = models.FloatField()
-    tax = models.FloatField()
+    discount = models.FloatField(blank=True, null=True)
+    tax = models.FloatField(blank=True, null=True)
     def __str__(self):
         return self.name
 
@@ -45,8 +44,6 @@ class Payment(models.Model):
     #DESCRICAO
  #   def __str__(self):
   #      return self.name
-
-
 
 
 class AuthGroup(models.Model):
@@ -165,3 +162,44 @@ class DjangoSession(models.Model):
     class Meta:
         managed = False
         db_table = 'django_session'
+
+
+
+
+
+class Appointment(models.Model):
+    client = models.ForeignKey(AuthUser, models.DO_NOTHING, related_name="clientss")
+    professional = models.ForeignKey(AuthUser, models.DO_NOTHING, related_name="professionalss")
+    status = models.ForeignKey(Status, models.DO_NOTHING)
+    procedure = models.ForeignKey(Procedure, models.DO_NOTHING)
+    payment = models.ForeignKey(Payment, models.DO_NOTHING)
+    appdate = models.CharField(max_length=10)#format dd/mm/yyyy
+    apphour = models.CharField(max_length=5)#format hh:mm
+    total = models.IntegerField(blank = True, null = True)
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return str(self.apphour)
+
+    def get_apphour(self):
+        return self.__apphour
+
+
+class Schedule(models.Model):
+    professional = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    begin = models.CharField(max_length=5)#format hh:mm
+    end = models.CharField(max_length=5)#format hh:mm
+    interval = models.IntegerField() #in minutes ex 10
+    weekday = models.IntegerField() #0 = monday
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return "Begin: " + self.begin +"\nEnd: " + self.end+"\nInterval: " + str(self.interval)
+
+class DayOff (models.Model):
+    professional = models.ForeignKey(AuthUser, models.DO_NOTHING, blank = True, null = True)
+    daydate = models.CharField(max_length=10)#format dd/mm/yyyy
+    reason = models.CharField(max_length=255)
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now=True)
+    
