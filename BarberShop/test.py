@@ -91,27 +91,25 @@ print('--------------------texte Client post---------------------')
 url = "http://localhost:8000/client/"
 cpf = CPF()
 new_cpf_one = cpf.generate()
-    
-for x in range (3):
-    data = {"name": "TesteMask", "birthday": "13/11/20", "email": "teste@teste.com",
-    "doc": new_cpf_one, "password": "pbkdf2_sha256$216000$ZcvhOJYkbZOs$Oc0wUmZRtaVNl0/G/n7hqEqQJnRGzNuwtp3aB+NUHak="}
-    res = requests.post(url,data = data,headers=headers)
-    clientdata.append(res.json())
-    print(res.text)
-#print(res.status_code)
+sta =dict(name="teste", birthday = "13/11/20", email= "teste@teste.com",
+username= "88442624368", password = "pbkdf2_sha256$216000$ZcvhOJYkbZOs$Oc0wUmZRtaVNl0/G/n7hqEqQJnRGzNuwtp3aB+NUHak=")
+res = requests.post(url,data = sta)
+clientdata.append(res.json())
+print(str(res))
+
 
 print('--------------------texte client put---------------------')
 url = "http://localhost:8000/client/"
-for k in paydata:
-    resposta = requests.put(url +str(k["client_id"])+'/',headers=headers)
-    k['name'] = 'cancelado'
+for k in clientdata:
+    resposta = requests.put(url +str(k["id"])+'/',headers=headers)
+    k['is_staff'] = True
     print(str(k))
 
 print('--------------------texte client delete---------------------')
 url = "http://localhost:8000/client/"
 for de in clientdata:
     print(str(de))
-    d = requests.delete(url +str(de["client_id"])+'/',headers=headers)
+    d = requests.delete(url +str(de["id"])+'/',headers=headers)
 
 
 
