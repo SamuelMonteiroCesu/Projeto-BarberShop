@@ -81,22 +81,21 @@ def FreescheduleViewSet(request):
             return Response(i.reason)
         
     busy = list(busy)
-    busylist = []
+    busyclient = []
     for i in schedule:
         free += Time().FreeSchedule(i,busy)
     for i in free:
         app = Appointment()
         app.apphour = i
-        busylist.append(app)
-    busy += busylist
+        busyclient.append(app)
+    busy += busyclient
     busy = sorted(busy,key = lambda x: x.apphour)
-    
+    busy = AppointmentSerializer(busy,many = True)
     if request.user.is_staff:
-        
         return Response(busy.data)
     else:
-        busylist = AppointmentSerializer(busy,many = True)
-        return Response(busylist.data)
+        busyclient = AppointmentSerializer(busyclient,many = True)
+        return Response(busyclient.data)
 
 
 
