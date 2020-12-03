@@ -59,7 +59,7 @@ def PassChangeViewSet(request):
     return Response("Senha alterada com sucesso")
 
 
-@api_view(['GET',])
+@api_view(['GET','POST',])
 @permission_classes([IsAuthenticated])
 def FreescheduleViewSet(request):
     print('------------------------')
@@ -100,7 +100,7 @@ def FreescheduleViewSet(request):
 
 
 
-@api_view(['GET',])
+@api_view(['GET','POST',])
 @permission_classes([IsAuthenticated])
 def MyScheduleViewSet(request):
     print('------------------------')
