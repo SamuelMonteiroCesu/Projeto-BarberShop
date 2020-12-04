@@ -26,6 +26,7 @@ urlpatterns = [
     
     path('test/',views.home),
     path('getuser/',views.GetUserViewSet),
+    path('getprof/',views.GetProfViewSet),
     path('passrecover/',views.PassRecoverViewSet),
     path('passchange/',views.PassChangeViewSet),
     path('freeschedule/',views.FreescheduleViewSet),
