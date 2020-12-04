@@ -46,6 +46,17 @@ def GetUserViewSet(request):
     return Response(serializer.data)
 
 
+@api_view(['GET',])
+@permission_classes([IsAuthenticated])
+def GetProfViewSet(request):
+    try:
+        user = User.objects.filter(is_staff = True).filter(is_active=True)
+    except:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+    serializer = ClientSerializer(user, many = True)
+    return Response(serializer.data)
+
+
 @api_view(['POST',])
 @permission_classes([IsAuthenticated])
 def PassChangeViewSet(request):
@@ -107,12 +118,12 @@ def MyScheduleViewSet(request):
     print(request.data)
     print('------------------------')
     free = []
-    weekday = Time().convertweekday(request.data['deite'])
+    weekday = Time().convertweekday(request.data['date'])
     dayoff = []
     try:
-        dayoff = DayOff.objects.filter(daydate = request.data['deite']).filter(professional=request.user.id)
+        dayoff = DayOff.objects.filter(daydate = request.data['date']).filter(professional=request.user.id)
         schedule = Schedule.objects.filter(professional=request.user.id).filter(weekday=weekday)
-        busy = Appointment.objects.filter(professional=request.user.id).filter(appdate = request.data['deite'])
+        busy = Appointment.objects.filter(professional=request.user.id).filter(appdate = request.data['date'])
 
     except:
         pass
@@ -128,7 +139,7 @@ def MyScheduleViewSet(request):
     for i in free:
         app = Appointment()
         app.apphour = i
-        app.appdate = request.data['deite']
+        app.appdate = request.data['date']
         busyclient.append(app)
     busy += busyclient
     busy = sorted(busy,key = lambda x: x.apphour)
