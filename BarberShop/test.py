@@ -11,9 +11,10 @@ statsdata=[]
 procedata=[]
 paydata=[]
 clientdata=[]
-
-
+daydata=[]
+squedata =[]
 '''
+print('####################texte status########################')
 print('--------------------texte status post---------------------')
 endpoint_status = "http://localhost:8000/status/"
 nomes = ["finalizado", "em andamento", "cancelado", "reagendado"]
@@ -36,12 +37,7 @@ for i in statsdata:
     print(str(i))
 #print(resposta.status_code)
 
-print('--------------------texte status delete---------------------')
-url = "http://localhost:8000/status/"
-for t in statsdata:
-    print(str(t))
-    d = requests.delete(url +str(t["status_id"])+'/',headers=headers)
-
+print('####################texte Procedure########################')
 print('--------------------texte Procedure post---------------------')
 url = "http://localhost:8000/procedure/"
 nomes = ["cortar", "barbear", "lavar", "pentear"]
@@ -58,12 +54,7 @@ for i in procedata:
     i['name'] = 'cancelado'
     print(str(i))
 
-print('--------------------texte procedure delete---------------------')
-url = "http://localhost:8000/procedure/"
-for k in procedata:
-    print(str(k))
-    d = requests.delete(url +str(k["procedure_id"])+'/',headers=headers)
-
+print('####################texte Payment########################')
 print('--------------------texte Payment post---------------------')
 url = "http://localhost:8000/payment/"
 nomes = ["debito", "credito", "dinheiro"]
@@ -80,13 +71,8 @@ for k in paydata:
     k['name'] = 'cancelado'
     print(str(k))
 
-print('--------------------texte Payment delete---------------------')
-url = "http://localhost:8000/payment/"
-for de in paydata:
-    print(str(de))
-    d = requests.delete(url +str(de["payment_id"])+'/',headers=headers)
 
-'''
+print('####################texte Client########################')
 print('--------------------texte Client post---------------------')
 url = "http://localhost:8000/client/"
 cpf = CPF()
@@ -97,7 +83,6 @@ res = requests.post(url,data = sta)
 clientdata.append(res.json())
 print(str(res))
 
-
 print('--------------------texte client put---------------------')
 url = "http://localhost:8000/client/"
 for k in clientdata:
@@ -105,11 +90,102 @@ for k in clientdata:
     k['is_staff'] = True
     print(str(k))
 
+print('--------------texte de recuperacao de senha------------------')
+print('digite o cpf para recuperar a senha')
+reccpf = input()
+print('digite o email para recuperar a senha')
+recemail = input()
+dt = dict(reccpf = '')
+url = "http://localhost:8000/passrecover/"
+newsenha = requests.post()
+'''
+
+print('####################texte dayoff########################')
+print('--------------------texte dayoff post---------------------')
+url = "http://localhost:8000/dayoff/"
+sta =dict(daydate='20/03/2000',reason='teste' ,active=True , professional=1)
+pay = requests.post(url,data = sta)
+daydata.append (pay.json())
+print(str(pay.json()))
+
+print('--------------------texte dayoff put---------------------')
+url = "http://localhost:8000/dayoff/"
+for k in clientdata:
+    resposta = requests.put(url +str(k["id"])+'/',headers=headers)
+    k['active'] = False
+    print(str(k))
+
+print('--------------------texte dayoff delete---------------------')
+url = "http://localhost:8000/dayoff/"
+for t in dayoffdata:
+    print(str(t))
+    d = requests.delete(url +str(t["id"])+'/',headers=headers)
+
+
+print('####################texte Schedule########################')
+print('--------------------texte Schedule post---------------------')
+
+url = "http://localhost:8000/Schedule/"
+sta =dict(begin= '10:00',end='18:00', interval= 20,weekday=4,active=True , professional=1)
+pay = requests.post(url,data = sta)
+squedata.append (pay.json())
+print(str(pay.json()))
+
+print('--------------------texte Schedule put---------------------')
+url = "http://localhost:8000/Schedule/"
+for k in clientdata:
+    resposta = requests.put(url +str(k["id"])+'/',headers=headers)
+    k['active'] = False
+    print(str(k))
+
+print('--------------------texte Schedule delete---------------------')
+url = "http://localhost:8000/Schedule/"
+for t in squedata:
+    print(str(t))
+    d = requests.delete(url +str(t["id"])+'/',headers=headers)
+
+'''
+print('--------------texte de recuperacao de senha------------------')
+print('digite o cpf para recuperar a senha')
+reccpf = input()
+print('digite o email para recuperar a senha')
+recemail = input()
+dt = dict(reccpf = '')
+url = "http://localhost:8000/passchange/"
+newsenha = requests.post()
+
+
+print('####################finalizando teste########################')
+print('--------------------texte status delete---------------------')
+url = "http://localhost:8000/status/"
+for t in statsdata:
+    print(str(t))
+    d = requests.delete(url +str(t["status_id"])+'/',headers=headers)
+
+
+print('--------------------texte Payment delete---------------------')
+url = "http://localhost:8000/payment/"
+for de in paydata:
+    print(str(de))
+    d = requests.delete(url +str(de["payment_id"])+'/',headers=headers)
+
+
+print('--------------------texte procedure delete---------------------')
+url = "http://localhost:8000/procedure/"
+for k in procedata:
+    print(str(k))
+    d = requests.delete(url +str(k["procedure_id"])+'/',headers=headers)
+
+
 print('--------------------texte client delete---------------------')
 url = "http://localhost:8000/client/"
 for de in clientdata:
     print(str(de))
-    d = requests.delete(url +str(de["id"])+'/',headers=headers)
-
-
-
+    d = requests.delete(url +str(de["id"])+'/',headers=headers)'
+    
+print('--------------------texte dayoff delete---------------------')
+url = "http://localhost:8000/dayoff/"
+for t in dayoffdata:
+    print(str(t))
+    d = requests.delete(url +str(t["id"])+'/',headers=headers)
+'''

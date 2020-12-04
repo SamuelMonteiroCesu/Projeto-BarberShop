@@ -59,43 +59,85 @@ def PassChangeViewSet(request):
     return Response("Senha alterada com sucesso")
 
 
-@api_view(['GET',])
+@api_view(['GET','POST',])
 @permission_classes([IsAuthenticated])
 def FreescheduleViewSet(request):
+    print('------------------------')
+    print(request.data)
+    print('------------------------')
     free = []
     weekday = Time().convertweekday(request.data['date'])
     dayoff = []
     try:
         dayoff = DayOff.objects.filter(daydate = request.data['date']).filter(professional=request.data['professional'])
         schedule = Schedule.objects.filter(professional=request.data['professional']).filter(weekday=weekday)
-        #schedule = Schedule.objects.get(professional=request.data['professional'] , weekday=weekday)
         busy = Appointment.objects.filter(professional=request.data['professional']).filter(appdate = request.data['date'])
 
     except:
         pass
-    #dayoff = list(dayoff)
-    #if request.user.is_staff == False:
     if len(dayoff) >= 1 and request.user.is_staff == False:
         print('---------------'+request.user.username)
         for i in dayoff:
             return Response(i.reason)
         
-
     busy = list(busy)
+    busyclient = []
     for i in schedule:
         free += Time().FreeSchedule(i,busy)
     for i in free:
         app = Appointment()
         app.apphour = i
-        busy.append(app)
+        app.appdate = request.data['date']
+        busyclient.append(app)
+    busy += busyclient
     busy = sorted(busy,key = lambda x: x.apphour)
     busy = AppointmentSerializer(busy,many = True)
     if request.user.is_staff:
         return Response(busy.data)
     else:
-        return Response(free)
+        busyclient = AppointmentSerializer(busyclient,many = True)
+        return Response(busyclient.data)
 
 
+
+@api_view(['GET','POST',])
+@permission_classes([IsAuthenticated])
+def MyScheduleViewSet(request):
+    print('------------------------')
+    print(request.data)
+    print('------------------------')
+    free = []
+    weekday = Time().convertweekday(request.data['deite'])
+    dayoff = []
+    try:
+        dayoff = DayOff.objects.filter(daydate = request.data['deite']).filter(professional=request.user.id)
+        schedule = Schedule.objects.filter(professional=request.user.id).filter(weekday=weekday)
+        busy = Appointment.objects.filter(professional=request.user.id).filter(appdate = request.data['deite'])
+
+    except:
+        pass
+    if len(dayoff) >= 1 and request.user.is_staff == False:
+        print('---------------'+request.user.username)
+        for i in dayoff:
+            return Response(i.reason)
+        
+    busy = list(busy)
+    busyclient = []
+    for i in schedule:
+        free += Time().FreeSchedule(i,busy)
+    for i in free:
+        app = Appointment()
+        app.apphour = i
+        app.appdate = request.data['deite']
+        busyclient.append(app)
+    busy += busyclient
+    busy = sorted(busy,key = lambda x: x.apphour)
+    busy = AppointmentSerializer(busy,many = True)
+    print("---------------")
+    print(request.user.username)
+    print(request.user.is_staff)
+    print("---------------")
+    return Response(busy.data)
 
 
 # Status Procedure Payment Company Employee Client 
@@ -153,7 +195,7 @@ class ClientViewSet(viewsets.ModelViewSet):
             return Response({'400: DUPLICATED *DOCUMENT* - CHECK PLEASE'})
         user = User.objects.create_user(email = request.data['email'], first_name= request.data['first_name'],username=request.data['username'], last_name=request.data['last_name'], password=request.data['last_name'], is_superuser=0, is_staff=0)
         user.save()
-        return Response(user.json())
+        return Response({'200: CLIENT CREATED --' +user.username })
 
 
 
