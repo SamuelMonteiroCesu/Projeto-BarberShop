@@ -70,7 +70,7 @@ for k in paydata:
     resposta = requests.put(url +str(k["payment_id"])+'/',headers=headers)
     k['name'] = 'cancelado'
     print(str(k))
-
+'''
 
 print('####################texte Client########################')
 print('--------------------texte Client post---------------------')
@@ -98,8 +98,7 @@ recemail = input()
 dt = dict(reccpf = '')
 url = "http://localhost:8000/passrecover/"
 newsenha = requests.post()
-'''
-
+''''
 print('####################texte dayoff########################')
 print('--------------------texte dayoff post---------------------')
 url = "http://localhost:8000/dayoff/"
@@ -144,7 +143,9 @@ for t in squedata:
     print(str(t))
     d = requests.delete(url +str(t["id"])+'/',headers=headers)
 
-'''
+print('####################texte Schedule########################')
+
+
 print('--------------texte de recuperacao de senha------------------')
 print('digite o cpf para recuperar a senha')
 reccpf = input()
