@@ -205,7 +205,8 @@ class ClientViewSet(viewsets.ModelViewSet):
             return Response({'400: DUPLICATED *DOCUMENT* - CHECK PLEASE'})
         user = User.objects.create_user(email = request.data['email'], first_name= request.data['first_name'],username=request.data['username'], last_name=request.data['last_name'], password=request.data['last_name'], is_superuser=0, is_staff=0)
         user.save()
-        return Response({'200: CLIENT CREATED --' +user.username })
+        serializer = ClientSerializer(user, many = True)
+        return Response(serializer.data)
 
 
 
