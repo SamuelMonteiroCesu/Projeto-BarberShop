@@ -203,7 +203,7 @@ class ClientViewSet(viewsets.ModelViewSet):
             None
         print(user)
         if (user.username != ""):
-            return Response({'400: DUPLICATED *DOCUMENT* - CHECK PLEASE'})
+            return Response(status = status.HTTP_404_NOT_FOUND)
         user = User.objects.create_user(email = request.data['email'], first_name= request.data['first_name'],username=request.data['username'], last_name=request.data['last_name'], password=request.data['last_name'], is_superuser=0, is_staff=0)
         user.save()
         serializer = ClientSerializer(user, many = True)
