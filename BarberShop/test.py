@@ -1,6 +1,7 @@
 import json,requests
 import random
 from validate_docbr import CPF
+
 #metodo utilizado para obter token de acesso com localhost user=pedro senha=pedro098 
 #metodo utilizado para obter token de acesso com heroku user=pedro senha=pedro098 
 Token = requests.post('http://localhost:8000/login/',{'username':'pedro','password':'pedro098'})
@@ -59,7 +60,7 @@ print('--------------------texte Payment post---------------------')
 url = "http://localhost:8000/payment/"
 nomes = ["debito", "credito", "dinheiro"]
 for x in nomes:
-    sta =dict(name = x,discount=random.randint(0,35),tax=random.randint(10,45) )
+    sta =dict(name = x,discount=random.randint(0,35),tax=random.randint(10,45),active=True )
     pay = requests.post(url,data = sta,headers=headers)
     paydata.append (pay.json())
     print(str(pay.json()))
@@ -70,92 +71,104 @@ for k in paydata:
     resposta = requests.put(url +str(k["payment_id"])+'/',headers=headers)
     k['name'] = 'cancelado'
     print(str(k))
-'''
+
 
 print('####################texte Client########################')
-print('--------------------texte Client post---------------------')
-url = "http://localhost:8000/client/"
-cpf = CPF()
-new_cpf_one = cpf.generate()
-sta =dict(name="teste", birthday = "13/11/20", email= "teste@teste.com",
-username= "88442624368", password = "pbkdf2_sha256$216000$ZcvhOJYkbZOs$Oc0wUmZRtaVNl0/G/n7hqEqQJnRGzNuwtp3aB+NUHak=")
-res = requests.post(url,data = sta)
-clientdata.append(res.json())
-print(str(res))
+try:
+    print('--------------------texte Client post---------------------')
+    url = "http://localhost:8000/client/"
+    sta =dict(first_name="teste",last_name="teste", birthday = "13/11/20", email= "teste@teste.com",
+    username= "88442624368", password = "pedro")
+    res = requests.post(url,data = sta)
+    clientdata.append (res.json())
+    print(str(res))
+except:
+    print('erro a cadastrar cliente')
 
-print('--------------------texte client put---------------------')
-url = "http://localhost:8000/client/"
-for k in clientdata:
-    resposta = requests.put(url +str(k["id"])+'/',headers=headers)
-    k['is_staff'] = True
-    print(str(k))
+try:
+    print('--------------------texte client put---------------------')
+    url = "http://localhost:8000/client/"
+    for k in clientdata:
+        resposta = requests.put(url +str(k["id"])+'/',headers=headers)
+        k['is_staff'] = True
+        print(str(k))
+except:
+    print('erro a aatualizar o cliente cliente')
 
-print('--------------texte de recuperacao de senha------------------')
-print('digite o cpf para recuperar a senha')
-reccpf = input()
-print('digite o email para recuperar a senha')
-recemail = input()
-dt = dict(reccpf = '')
-url = "http://localhost:8000/passrecover/"
-newsenha = requests.post()
-''''
+try:
+    print('--------------------texte client delete---------------------')
+    url = "http://localhost:8000/client/"
+    for de in clientdata:
+        print(str(de))
+        d = requests.delete(url +str(de["id"])+'/',headers=headers)
+except:
+    print('erro a deletar o cliente cliente')
+
+'''
 print('####################texte dayoff########################')
-print('--------------------texte dayoff post---------------------')
-url = "http://localhost:8000/dayoff/"
-sta =dict(daydate='20/03/2000',reason='teste' ,active=True , professional=1)
-pay = requests.post(url,data = sta)
-daydata.append (pay.json())
-print(str(pay.json()))
+try:
+    print('--------------------texte dayoff post---------------------')
+    url = "http://localhost:8000/dayoff/"
+    sta =dict(daydate='20/03/2000',reason='teste' ,active=True , professional=1)
+    pay = requests.post(url,data = sta)
+    daydata.append (pay.json())
+    print(str(pay.json()))
+except:
+    print('erro a fazer post dayoff')
+
 
 print('--------------------texte dayoff put---------------------')
-url = "http://localhost:8000/dayoff/"
-for k in clientdata:
-    resposta = requests.put(url +str(k["id"])+'/',headers=headers)
-    k['active'] = False
-    print(str(k))
+try:
+    url = "http://localhost:8000/dayoff/"
+    for k in daydata:
+        resposta = requests.put(url +str(k["id"])+'/',headers=headers)
+        k['active'] = False
+        print(str(k))
+except:
+    print('erro a fazer put dayoff')
+
 
 print('--------------------texte dayoff delete---------------------')
-url = "http://localhost:8000/dayoff/"
-for t in dayoffdata:
-    print(str(t))
-    d = requests.delete(url +str(t["id"])+'/',headers=headers)
-
+try:
+    url = "http://localhost:8000/dayoff/"
+    for t in daydata:
+        print(str(t))
+        d = requests.delete(url +str(t["id"])+'/',headers=headers)
+except:
+    print('erro a fazer delete dayoff')
 
 print('####################texte Schedule########################')
 print('--------------------texte Schedule post---------------------')
-
-url = "http://localhost:8000/Schedule/"
-sta =dict(begin= '10:00',end='18:00', interval= 20,weekday=4,active=True , professional=1)
-pay = requests.post(url,data = sta)
-squedata.append (pay.json())
-print(str(pay.json()))
+try:
+    url = "http://localhost:8000/schedule/"
+    sta =dict(begin= '10:00',end='18:00', interval= 20,weekday=4,active=True , professional=1)
+    pay = requests.post(url,data = sta)
+    squedata.append (pay.json())
+    print(str(pay.json()))
+except:
+    print('erro a fazer post Schedule')
 
 print('--------------------texte Schedule put---------------------')
-url = "http://localhost:8000/Schedule/"
-for k in clientdata:
-    resposta = requests.put(url +str(k["id"])+'/',headers=headers)
-    k['active'] = False
-    print(str(k))
+try:
+    url = "http://localhost:8000/schedule/"
+    for k in squedata:
+        resposta = requests.put(url +str(k["id"])+'/',headers=headers)
+        k['active'] = False
+        print(str(k))
+except:
+    print('erro a fazer put Schedule')
 
 print('--------------------texte Schedule delete---------------------')
-url = "http://localhost:8000/Schedule/"
-for t in squedata:
-    print(str(t))
-    d = requests.delete(url +str(t["id"])+'/',headers=headers)
+try:
+    url = "http://localhost:8000/Schedule/"
+    for t in squedata:
+        print(str(t))
+        d = requests.delete(url +str(t["id"])+'/',headers=headers)
+except:
+    print('erro a fazer post Schedule')
+    print(d)
 
-print('####################texte Schedule########################')
-
-
-print('--------------texte de recuperacao de senha------------------')
-print('digite o cpf para recuperar a senha')
-reccpf = input()
-print('digite o email para recuperar a senha')
-recemail = input()
-dt = dict(reccpf = '')
-url = "http://localhost:8000/passchange/"
-newsenha = requests.post()
-
-
+    '''
 print('####################finalizando teste########################')
 print('--------------------texte status delete---------------------')
 url = "http://localhost:8000/status/"

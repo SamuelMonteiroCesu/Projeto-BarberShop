@@ -83,7 +83,7 @@ class AuthUser(models.Model):
     email = models.CharField(max_length=254)
     username = models.CharField(unique=True, max_length=150)
     password = models.CharField(max_length=128)
-    #nao usaremos essa variveis 
+
     last_login = models.DateTimeField(blank=True, null=True)
     is_staff = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)

@@ -69,7 +69,7 @@ def PassChangeViewSet(request):
     user.save()
     return Response("Senha alterada com sucesso")
 
-
+#cliente
 @api_view(['GET','POST',])
 @permission_classes([IsAuthenticated])
 def FreescheduleViewSet(request):
@@ -110,7 +110,7 @@ def FreescheduleViewSet(request):
         return Response(busyclient.data)
 
 
-
+#funcinario
 @api_view(['GET','POST',])
 @permission_classes([IsAuthenticated])
 def MyScheduleViewSet(request):
@@ -195,7 +195,6 @@ class ClientViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         #first_name, last_name, email, username, password, is_staff, is_active, is_superuser
         # name, birthday, doc, email, password
-        #o username sera o cpf e a senha/password e lastname sera utilizado a data de nacimento
         user = User()
         try:
             user = User.objects.get(username = request.data['username'])
@@ -203,12 +202,11 @@ class ClientViewSet(viewsets.ModelViewSet):
             None
         print(user)
         if (user.username != ""):
-            return Response(status = status.HTTP_404_NOT_FOUND)
+            return Response({'400: DUPLICATED *DOCUMENT* - CHECK PLEASE'})
         user = User.objects.create_user(email = request.data['email'], first_name= request.data['first_name'],username=request.data['username'], last_name=request.data['last_name'], password=request.data['last_name'], is_superuser=0, is_staff=0)
         user.save()
         serializer = ClientSerializer(user, many = True)
         return Response(serializer.data)
-
 
 
 
