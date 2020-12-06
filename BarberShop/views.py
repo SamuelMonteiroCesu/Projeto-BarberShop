@@ -14,6 +14,22 @@ from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from .utility import *
 import random
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
+from rest_framework.viewsets import ReadOnlyModelViewSet
+
+
+class ActionBasedPermission(AllowAny):
+    """
+    Grant or deny access to a view, based on a mapping in view.action_permissions
+    """
+    def has_permission(self, request, view):
+        for klass, actions in getattr(view, 'action_permissions', {}).items():
+            if view.action in actions:
+                return klass().has_permission(request, view)
+        return False
+
+
 
 def home (request):
     return render(request, 'home.html')
@@ -152,10 +168,11 @@ def MyScheduleViewSet(request):
 
 
 # Status Procedure Payment Company Employee Client 
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 class StatusViewSet(viewsets.ModelViewSet):
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
+    permission_classes = (IsAdminUser,)
 
 '''
     def list(self, request):
@@ -180,16 +197,38 @@ class ProcedureViewSet(viewsets.ModelViewSet):
     queryset = Procedure.objects.all()
     serializer_class = ProcedureSerializer
 
+    permission_classes = (ActionBasedPermission,)
+    action_permissions = {
+        #IsAuthenticated: ['update', 'partial_update', 'destroy', 'list', 'create'],
+        IsAdminUser: ['update', 'partial_update', 'destroy', 'list', 'create','retrieve'],
+        AllowAny: []
+    }
+
 @permission_classes([IsAuthenticated])
 class PaymentViewSet(viewsets.ModelViewSet):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
 
+    permission_classes = (ActionBasedPermission,)
+    action_permissions = {
+        #IsAuthenticated: ['update', 'partial_update', 'destroy', 'list', 'create'],
+        IsAdminUser: ['update', 'partial_update', 'destroy', 'list', 'create','retrieve'],
+        AllowAny: []
+    }
+    
 
 
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = AuthUser.objects.all()
     serializer_class = ClientSerializer
+
+    permission_classes = (ActionBasedPermission,)
+    action_permissions = {
+        #IsAuthenticated: ['update', 'partial_update', 'destroy', 'list', 'create'],
+        IsAdminUser: ['update', 'partial_update', 'destroy', 'list', 'create','retrieve'],
+        AllowAny: ['create',]
+    }
+
 
 
     def create(self, request, *args, **kwargs):
@@ -202,15 +241,22 @@ class ClientViewSet(viewsets.ModelViewSet):
             None
         print(user)
         if (user.username != ""):
-            return Response({'400: DUPLICATED *DOCUMENT* - CHECK PLEASE'})
-        user = User.objects.create_user(email = request.data['email'], first_name= request.data['first_name'],username=request.data['username'], last_name=request.data['last_name'], password=request.data['last_name'], is_superuser=0, is_staff=0)
+            return Response(status = status.HTTP_404_NOT_FOUND)
+        if(request.user.is_staff == False):
+            user = User.objects.create_user(email = request.data['email'], first_name= request.data['first_name'],username=request.data['username'], last_name=request.data['last_name'], password=request.data['last_name'], is_superuser=0, is_staff=0)
+        elif(request.user.is_staff == True):
+            user = User.objects.create_user(email = request.data['email'], first_name= request.data['first_name'],username=request.data['username'], last_name=request.data['last_name'], password=request.data['last_name'], is_superuser=0, is_staff=request.data['is_staff'])
+        else:
+            return Response(status = status.HTTP_404_NOT_FOUND)
         user.save()
-        serializer = ClientSerializer(user, many = True)
+        serializer = ClientSerializer(user)
         return Response(serializer.data)
 
 
 
-'''
+
+
+''''
 @permission_classes([IsAuthenticated])
 class BugBountyViewSet(viewsets.ModelViewSet):
     #Pode se usar uma flag para controlar o method names e bloquear os methodos a minha escolha
@@ -232,11 +278,49 @@ class BugBountyViewSet(viewsets.ModelViewSet):
 class AppointmentViewSet(viewsets.ModelViewSet):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
+    
+    permission_classes = (ActionBasedPermission,)
+    action_permissions = {
+        IsAuthenticated: ['create','list','retrieve'],
+        IsAdminUser: ['update', 'partial_update', 'destroy', 'list', 'create','retrieve'],
+    }
+
+    def destroy(self, request, pk=None):
+        instance = Appointment.objects.get(pk =pk)
+        instance.active = False
+        instance.save()
+        serializers = AppointmentSerializer(instance)
+        return Response(serializers.data)
+
+
+    def retrieve(self, request, pk=None):
+        instance = Appointment.objects.get(pk =pk)
+        if (request.user.is_staff == False) and (instance.client.id != request.user.id):
+            return Response(status = status.HTTP_404_NOT_FOUND)        
+        serializers = AppointmentSerializer(instance)
+        return Response(serializers.data)
+
+
+    def list(self, request):
+        print(request.user.username)
+        if request.user.is_staff:
+            queryset = queryset = Appointment.objects.all()
+        else:
+            queryset = queryset = Appointment.objects.filter(client = request.user.id)
+        queryset = sorted(queryset,key = lambda x: (x.appdate[6:10],x.appdate[3:5],x.appdate[0:2],x.apphour))
+        serializer = AppointmentSerializer(queryset,many=True)
+        return Response(serializer.data)
+
+
+
 
 class ScheduleViewSet(viewsets.ModelViewSet):
     queryset = Schedule.objects.all()
     serializer_class = ScheduleSerializer
+    permission_classes = (IsAdminUser,)
 
 class DayOffViewSet(viewsets.ModelViewSet):
     queryset = DayOff.objects.all()
     serializer_class = DayOffSerializer
+    permission_classes = (IsAdminUser,)
+    
