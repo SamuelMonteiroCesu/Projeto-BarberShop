@@ -239,12 +239,13 @@ class ClientViewSet(viewsets.ModelViewSet):
             user = User.objects.get(username = request.data['username'])
         except:
             None
-        print(user)
         if (user.username != ""):
             return Response(status = status.HTTP_404_NOT_FOUND)
         if(request.user.is_staff == False):
             user = User.objects.create_user(email = request.data['email'], first_name= request.data['first_name'],username=request.data['username'], last_name=request.data['last_name'], password=request.data['last_name'], is_superuser=0, is_staff=0)
         elif(request.user.is_staff == True):
+            request.data['is_staff'] = bool(request.data['is_staff'])
+            print(request.data['is_staff'])
             user = User.objects.create_user(email = request.data['email'], first_name= request.data['first_name'],username=request.data['username'], last_name=request.data['last_name'], password=request.data['last_name'], is_superuser=0, is_staff=request.data['is_staff'])
         else:
             return Response(status = status.HTTP_404_NOT_FOUND)
@@ -264,14 +265,6 @@ class BugBountyViewSet(viewsets.ModelViewSet):
     serializer_class = BugBountySerializer
     http_method_names = ['get','post','head']
 
-'''    def destroy(self, request, *args, **kwargs):
-        return Response({'detail': request.method +' << NOT ALLOWEDs'})
-
-    def update(self, request, *args, **kwargs):
-        return Response({'detail': request.method +' << NOT ALLOWED'})
-
-    def partial_update(self, request, *args, **kwargs):
-        return Response({'detail': request.method +' << NOT ALLOWED'})'''
 
 
 

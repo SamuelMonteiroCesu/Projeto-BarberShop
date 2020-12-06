@@ -180,6 +180,7 @@ class DjangoSession(models.Model):
 
 
 class Appointment(models.Model):
+    #['client','professional','status','procedure','payment' ]
     client = models.ForeignKey(AuthUser, models.DO_NOTHING, related_name="clientss")
     professional = models.ForeignKey(AuthUser, models.DO_NOTHING, related_name="professionalss")
     status = models.ForeignKey(Status, models.DO_NOTHING)
