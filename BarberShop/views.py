@@ -224,9 +224,10 @@ class ClientViewSet(viewsets.ModelViewSet):
 
     permission_classes = (ActionBasedPermission,)
     action_permissions = {
+        
         #IsAuthenticated: ['update', 'partial_update', 'destroy', 'list', 'create'],
-        IsAdminUser: ['update', 'partial_update', 'destroy', 'list', 'create','retrieve'],
-        AllowAny: ['create',]
+        IsAdminUser: ['update', 'partial_update', 'destroy', 'list','retrieve'],
+        AllowAny: ['create',],
     }
 
 
