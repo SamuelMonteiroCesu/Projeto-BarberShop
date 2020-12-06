@@ -85,7 +85,7 @@ def PassChangeViewSet(request):
     user.save()
     return Response("Senha alterada com sucesso")
 
-#cliente
+
 @api_view(['GET','POST',])
 @permission_classes([IsAuthenticated])
 def FreescheduleViewSet(request):
@@ -126,7 +126,7 @@ def FreescheduleViewSet(request):
         return Response(busyclient.data)
 
 
-#funcinario
+
 @api_view(['GET','POST',])
 @permission_classes([IsAuthenticated])
 def MyScheduleViewSet(request):
@@ -191,6 +191,23 @@ class StatusViewSet(viewsets.ModelViewSet):
         return Response(data)
 '''
 
+'''
+    def list(self, request):
+        data = {}
+        data['user'] = []
+        data['user'].append(request.user.first_name)
+        data['user'].append(request.user.id)
+        queryset = Status.objects.all()
+        serializer = StatusSerializer(queryset,many=True)
+        data['data'] = serializer.data
+        print("---------------")
+        print(data)
+        usuario = User.objects.get(id = request.user.id)
+        print(usuario)
+        print("---------------")
+        return Response(data)
+'''
+
 
 @permission_classes([IsAuthenticated])
 class ProcedureViewSet(viewsets.ModelViewSet):
@@ -218,6 +235,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
     
 
 
+
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = AuthUser.objects.all()
     serializer_class = ClientSerializer
@@ -239,12 +257,13 @@ class ClientViewSet(viewsets.ModelViewSet):
             user = User.objects.get(username = request.data['username'])
         except:
             None
-        print(user)
         if (user.username != ""):
             return Response(status = status.HTTP_404_NOT_FOUND)
         if(request.user.is_staff == False):
             user = User.objects.create_user(email = request.data['email'], first_name= request.data['first_name'],username=request.data['username'], last_name=request.data['last_name'], password=request.data['last_name'], is_superuser=0, is_staff=0)
         elif(request.user.is_staff == True):
+            request.data['is_staff'] = bool(request.data['is_staff'])
+            print(request.data['is_staff'])
             user = User.objects.create_user(email = request.data['email'], first_name= request.data['first_name'],username=request.data['username'], last_name=request.data['last_name'], password=request.data['last_name'], is_superuser=0, is_staff=request.data['is_staff'])
         else:
             return Response(status = status.HTTP_404_NOT_FOUND)
@@ -256,22 +275,14 @@ class ClientViewSet(viewsets.ModelViewSet):
 
 
 
-''''
+'''
 @permission_classes([IsAuthenticated])
 class BugBountyViewSet(viewsets.ModelViewSet):
     #Pode se usar uma flag para controlar o method names e bloquear os methodos a minha escolha
     queryset = BugBounty.objects.all()
     serializer_class = BugBountySerializer
     http_method_names = ['get','post','head']
-
-    def destroy(self, request, *args, **kwargs):
-        return Response({'detail': request.method +' << NOT ALLOWEDs'})
-
-    def update(self, request, *args, **kwargs):
-        return Response({'detail': request.method +' << NOT ALLOWED'})
-
-    def partial_update(self, request, *args, **kwargs):
-        return Response({'detail': request.method +' << NOT ALLOWED'})'''
+'''
 
 
 

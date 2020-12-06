@@ -32,18 +32,32 @@ class Payment(models.Model):
 
 
 
-
-#class BugBounty(models.Model):
+'''
+class BugBounty(models.Model):
     # 'bug_id', 'name', 'content', 'solved', 'created_at', 'description'
- #   bug_id = models.AutoField(primary_key=True)
- #   name = models.CharField(max_length=255)
- #   subject = models.CharField(max_length=255)
- #   solved = models.BooleanField(default=False)
-  #  created_at = models.DateTimeField(auto_now=True)
- #   description = models.TextField()
+    bug_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    subject = models.CharField(max_length=255)
+    solved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now=True)
+    description = models.TextField()
     #DESCRICAO
- #   def __str__(self):
-  #      return self.name
+    def __str__(self):
+        return self.name
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class AuthGroup(models.Model):
@@ -77,7 +91,6 @@ class AuthPermission(models.Model):
 
 class AuthUser(models.Model):
 #first_name, last_name, email, username, password, is_staff, is_active, is_superuser
-#o username sera o cpf e a senha/password e lastname sera utilizado a data de nacimento
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     email = models.CharField(max_length=254)
@@ -167,6 +180,7 @@ class DjangoSession(models.Model):
 
 
 class Appointment(models.Model):
+    #['client','professional','status','procedure','payment' ]
     client = models.ForeignKey(AuthUser, models.DO_NOTHING, related_name="clientss")
     professional = models.ForeignKey(AuthUser, models.DO_NOTHING, related_name="professionalss")
     status = models.ForeignKey(Status, models.DO_NOTHING)
