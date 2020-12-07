@@ -242,9 +242,10 @@ class ClientViewSet(viewsets.ModelViewSet):
 
     permission_classes = (ActionBasedPermission,)
     action_permissions = {
+        
         #IsAuthenticated: ['update', 'partial_update', 'destroy', 'list', 'create'],
-        IsAdminUser: ['update', 'partial_update', 'destroy', 'list', 'create','retrieve'],
-        AllowAny: ['create',]
+        IsAdminUser: ['update', 'partial_update', 'destroy', 'list','retrieve'],
+        AllowAny: ['create',],
     }
 
 
@@ -259,14 +260,16 @@ class ClientViewSet(viewsets.ModelViewSet):
             None
         if (user.username != ""):
             return Response(status = status.HTTP_404_NOT_FOUND)
-        if(request.user.is_staff == False):
-            user = User.objects.create_user(email = request.data['email'], first_name= request.data['first_name'],username=request.data['username'], last_name=request.data['last_name'], password=request.data['last_name'], is_superuser=0, is_staff=0)
-        elif(request.user.is_staff == True):
+            
+        if(request.user.is_staff == True):
             request.data['is_staff'] = bool(request.data['is_staff'])
             print(request.data['is_staff'])
-            user = User.objects.create_user(email = request.data['email'], first_name= request.data['first_name'],username=request.data['username'], last_name=request.data['last_name'], password=request.data['last_name'], is_superuser=0, is_staff=request.data['is_staff'])
-        else:
-            return Response(status = status.HTTP_404_NOT_FOUND)
+            user = User.objects.create_user(email = request.data['email'], first_name= request.data['first_name'],username=request.data['username'], last_name=request.data['last_name'], password=request.data['last_name'], is_superuser=0, is_staff=request.data['is_staff'])        
+            user.save()
+            serializer = ClientSerializer(user)
+            return Response(serializer.data)
+        
+        user = User.objects.create_user(email = request.data['email'], first_name= request.data['first_name'],username=request.data['username'], last_name=request.data['last_name'], password=request.data['last_name'], is_superuser=0, is_staff=0)
         user.save()
         serializer = ClientSerializer(user)
         return Response(serializer.data)
@@ -283,7 +286,6 @@ class BugBountyViewSet(viewsets.ModelViewSet):
     serializer_class = BugBountySerializer
     http_method_names = ['get','post','head']
 '''
-
 
 
 class AppointmentViewSet(viewsets.ModelViewSet):
