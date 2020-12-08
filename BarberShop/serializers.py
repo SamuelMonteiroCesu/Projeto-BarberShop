@@ -39,11 +39,11 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
 #['client','professional','status','procedure','payment' ]
 class AppointmentSerializer(serializers.ModelSerializer):
-    client = ClientSerializer(read_only=True)
-    professional = ClientSerializer(read_only=True)
-    status = StatusSerializer(read_only=True)
-    procedure = ProcedureSerializer(read_only=True)
-    payment = PaymentSerializer(read_only=True)
+    #client = ClientSerializer(read_only=True)
+    #professional = ClientSerializer(read_only=True)
+    #status = StatusSerializer(read_only=True)
+    #procedure = ProcedureSerializer(read_only=True)
+    #payment = PaymentSerializer(read_only=True)
     class Meta:
         model = Appointment
         fields = "__all__"

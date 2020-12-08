@@ -278,7 +278,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     permission_classes = (ActionBasedPermission,)
     action_permissions = {
         IsAuthenticated: ['create','list','retrieve'],
-        IsAdminUser: ['update', 'partial_update', 'destroy', 'list', 'create','retrieve'],
+        IsAdminUser: ['update', 'partial_update', 'destroy'],
     }
 
     def destroy(self, request, pk=None):
