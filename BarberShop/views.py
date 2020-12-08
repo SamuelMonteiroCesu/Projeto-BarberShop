@@ -96,6 +96,8 @@ def FreescheduleViewSet(request):
     weekday = Time().convertweekday(request.data['date'])
     dayoff = []
     try:
+        professional = AuthUser.objects.get(id =request.data['professional'])
+        client = AuthUser.objects.get(id = request.user.id)
         dayoff = DayOff.objects.filter(daydate = request.data['date']).filter(professional=request.data['professional'])
         schedule = Schedule.objects.filter(professional=request.data['professional']).filter(weekday=weekday)
         busy = Appointment.objects.filter(professional=request.data['professional']).filter(appdate = request.data['date'])
@@ -115,8 +117,8 @@ def FreescheduleViewSet(request):
         app = Appointment()
         app.apphour = i
         app.appdate = request.data['date']
-        app.client = request.user.id
-        app.professional = request.data['professional']
+        app.client = client
+        app.professional = professional
         busyclient.append(app)
     busy += busyclient
     busy = sorted(busy,key = lambda x: x.apphour)
