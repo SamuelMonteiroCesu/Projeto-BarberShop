@@ -98,7 +98,7 @@ def FreescheduleViewSet(request):
     try:
         professional = AuthUser.objects.get(id =request.data['professional'])
         client = AuthUser.objects.get(id = request.user.id)
-        dayoff = DayOff.objects.filter(daydate = request.data['date']).filter(professional=request.data['professional'])
+        dayoff = DayOff.objects.filter(daydate = request.data['date']).filter(professional=request.data['professional']).filter(active = True)
         schedule = Schedule.objects.filter(professional=request.data['professional']).filter(weekday=weekday)
         busy = Appointment.objects.filter(professional=request.data['professional']).filter(appdate = request.data['date'])
 
@@ -281,8 +281,8 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     
     permission_classes = (ActionBasedPermission,)
     action_permissions = {
-        IsAuthenticated: ['create','list','retrieve'],
-        IsAdminUser: ['update', 'partial_update', 'destroy'],
+        IsAuthenticated: ['create','list','retrieve',],
+        IsAdminUser: ['update', 'partial_update', 'destroy',],
     }
 
     def destroy(self, request, pk=None):
@@ -320,7 +320,13 @@ class ScheduleViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser,)
 
 class DayOffViewSet(viewsets.ModelViewSet):
-    queryset = DayOff.objects.all()
+    queryset = DayOff.objects.filter(active = True)
     serializer_class = DayOffSerializer
     permission_classes = (IsAdminUser,)
     
+    def destroy(self, request, pk=None):
+        instance = DayOff.objects.get(pk =pk)
+        instance.active = False
+        instance.save()
+        serializers = DayOffSerializer(instance)
+        return Response(serializers.data)
