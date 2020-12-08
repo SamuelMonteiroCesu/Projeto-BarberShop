@@ -117,8 +117,8 @@ def FreescheduleViewSet(request):
         app = Appointment()
         app.apphour = i
         app.appdate = request.data['date']
-        #app.client = client
-        #app.professional = professional
+        app.client = client
+        app.professional = professional
         busyclient.append(app)
     busy += busyclient
     busy = sorted(busy,key = lambda x: x.apphour)
