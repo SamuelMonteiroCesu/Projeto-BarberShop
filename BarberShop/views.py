@@ -273,7 +273,7 @@ class BugBountyViewSet(viewsets.ModelViewSet):
 
 class AppointmentViewSet(viewsets.ModelViewSet):
     queryset = Appointment.objects.all()
-    serializer_class = AppointmentSerializer
+    serializer_class = AppSerializer
     
     permission_classes = (ActionBasedPermission,)
     action_permissions = {
