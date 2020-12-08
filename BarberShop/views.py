@@ -307,7 +307,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             queryset = queryset = Appointment.objects.all()
         else:
             queryset = queryset = Appointment.objects.filter(client = request.user.id)
-        queryset = sorted(queryset,key = lambda x: (x.appdate[6:10],x.appdate[3:5],x.appdate[0:2],x.apphour))
+        queryset = sorted(queryset,key = lambda x: (x.appdate[6:10],x.appdate[3:5],x.appdate[0:2],x.apphour), reverse= True)
         serializer = AppointmentSerializer(queryset,many=True)
         return Response(serializer.data)
 
