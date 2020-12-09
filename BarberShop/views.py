@@ -107,7 +107,7 @@ def FreescheduleViewSet(request):
     if len(dayoff) >= 1 and request.user.is_staff == False:
         print('---------------'+request.user.username)
         for i in dayoff:
-            return Response(i.reason)
+            return Response(free)
         
     busy = list(busy)
     busyclient = []
