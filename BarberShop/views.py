@@ -174,7 +174,7 @@ def MyScheduleViewSet(request):
 # Status Procedure Payment Company Employee Client 
 #@permission_classes([IsAuthenticated])
 class StatusViewSet(viewsets.ModelViewSet):
-    queryset = Status.objects.all()
+    queryset = Status.objects.all().order_by('name')
     serializer_class = StatusSerializer
     permission_classes = (IsAdminUser,)
 
@@ -198,7 +198,7 @@ class StatusViewSet(viewsets.ModelViewSet):
 
 @permission_classes([IsAuthenticated])
 class ProcedureViewSet(viewsets.ModelViewSet):
-    queryset = Procedure.objects.all()
+    queryset = Procedure.objects.all().order_by('name')
     serializer_class = ProcedureSerializer
 
     permission_classes = (ActionBasedPermission,)
@@ -210,7 +210,7 @@ class ProcedureViewSet(viewsets.ModelViewSet):
 
 @permission_classes([IsAuthenticated])
 class PaymentViewSet(viewsets.ModelViewSet):
-    queryset = Payment.objects.all()
+    queryset = Payment.objects.all().order_by('name')
     serializer_class = PaymentSerializer
 
     permission_classes = (ActionBasedPermission,)
@@ -315,12 +315,14 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 
 
 class ScheduleViewSet(viewsets.ModelViewSet):
-    queryset = Schedule.objects.all()
+    queryset = Schedule.objects.all().order_by('professional')
     serializer_class = ScheduleSerializer
     permission_classes = (IsAdminUser,)
 
+
+
 class DayOffViewSet(viewsets.ModelViewSet):
-    queryset = DayOff.objects.filter(active = True)
+    queryset = DayOff.objects.filter(active = True).order_by('professional')
     serializer_class = DayOffSerializer
     permission_classes = (IsAdminUser,)
     
