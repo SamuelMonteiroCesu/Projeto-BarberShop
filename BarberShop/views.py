@@ -223,7 +223,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
 
 
 class ClientViewSet(viewsets.ModelViewSet):
-    queryset = AuthUser.objects.all()
+    queryset = AuthUser.objects.all().order_by('first_name')
     serializer_class = ClientSerializer
 
     permission_classes = (ActionBasedPermission,)
