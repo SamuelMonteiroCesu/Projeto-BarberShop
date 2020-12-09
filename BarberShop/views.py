@@ -66,7 +66,7 @@ def GetUserViewSet(request):
 @permission_classes([IsAuthenticated])
 def GetProfViewSet(request):
     try:
-        user = User.objects.filter(is_staff = True).filter(is_active=True)
+        user = User.objects.filter(is_staff = True).filter(is_active=True).order_by('first_name')
     except:
         return Response(status = status.HTTP_404_NOT_FOUND)
     serializer = ClientSerializer(user, many = True)
